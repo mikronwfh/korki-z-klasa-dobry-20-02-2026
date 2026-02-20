@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { useCtrlS } from "@/hooks/useCtrlS";
+import { useToast } from "@/hooks/use-toast";
 
 const defaultHeroContent = {
   title_before: "Matematyka, Chemia,",
@@ -139,6 +140,7 @@ const toFeatureList = (value: string) =>
     .filter(Boolean);
 
 export function AdminContent() {
+  const { toast } = useToast();
   const {
     content: heroContent,
     loading: heroLoading,
@@ -279,13 +281,26 @@ export function AdminContent() {
   };
 
   const handleSaveAll = async () => {
-    await handleSaveHero();
-    await handleSaveServices();
-    await handleSaveAbout();
-    await handleSavePricing();
-    await handleSaveCourses();
-    await handleSaveContact();
-    alert("Treść zapisana! (Ctrl+S)");
+    try {
+      await handleSaveHero();
+      await handleSaveServices();
+      await handleSaveAbout();
+      await handleSavePricing();
+      await handleSaveCourses();
+      await handleSaveContact();
+      toast({
+        title: "✓ Zapisano",
+        description: "Wszystkie zmiany zostały zapisane pomyślnie",
+        duration: 3000,
+      });
+    } catch (error) {
+      toast({
+        title: "Błąd zapisu",
+        description: "Nie udało się zapisać zmian. Sprawdź uprawnienia w bazie danych.",
+        variant: "destructive",
+        duration: 5000,
+      });
+    }
   };
 
   useCtrlS(handleSaveAll);
