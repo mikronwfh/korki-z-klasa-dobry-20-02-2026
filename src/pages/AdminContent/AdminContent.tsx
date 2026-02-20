@@ -381,9 +381,9 @@ export function AdminContent() {
 
   return (
     <div className="space-y-10">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h2 className="text-2xl font-bold">Panel admin</h2>
-        <Button onClick={handleSaveAll} className="bg-green-600 hover:bg-green-700">
+        <Button onClick={handleSaveAll} className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
           Zapisz wszystko (Ctrl+S)
         </Button>
       </div>

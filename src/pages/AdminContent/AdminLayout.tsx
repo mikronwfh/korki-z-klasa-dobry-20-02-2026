@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import { auth } from "@/services/supabase";
 import { Button } from "@/components/ui/button";
+import { Menu, X } from "lucide-react";
 
 const adminNavItems = [
   { label: "Oferta", hash: "#uslugi" },
@@ -14,6 +15,7 @@ const adminNavItems = [
 export default function AdminLayout() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleLogout = async () => {
     setLoading(true);
@@ -34,10 +36,25 @@ export default function AdminLayout() {
   };
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-background flex-col md:flex-row">
+      {/* Mobile Header */}
+      <div className="md:hidden flex items-center justify-between bg-card border-b border-border p-4">
+        <h1 className="text-lg font-bold">Panel Admin</h1>
+        <button
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="p-2 hover:bg-card/50 rounded transition-colors"
+        >
+          {sidebarOpen ? <X size={24} /> : <Menu size={24} />}
+        </button>
+      </div>
+
       {/* Sidebar */}
-      <aside className="w-64 bg-card border-r border-border">
-        <div className="p-4 border-b border-border">
+      <aside
+        className={`${
+          sidebarOpen ? "block" : "hidden"
+        } md:block md:w-64 bg-card border-r border-border w-full md:relative fixed md:static inset-0 top-16 md:top-0 z-40`}
+      >
+        <div className="hidden md:block p-4 border-b border-border">
           <h1 className="text-xl font-bold">Panel Admin</h1>
         </div>
 
@@ -46,6 +63,7 @@ export default function AdminLayout() {
             <a
               key={item.label}
               href={item.hash}
+              onClick={() => setSidebarOpen(false)}
               className={`px-4 py-2 rounded text-sm transition-colors ${
                 location.hash === item.hash
                   ? "bg-primary text-primary-foreground font-medium"
@@ -57,7 +75,7 @@ export default function AdminLayout() {
           ))}
         </nav>
 
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="p-4 border-t border-border md:absolute md:bottom-4 md:left-4 md:right-4">
           <Button
             onClick={handleLogout}
             disabled={loading}
@@ -71,10 +89,18 @@ export default function AdminLayout() {
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
-        <div className="p-6">
+        <div className="p-3 md:p-4 lg:p-6">
           <Outlet />
         </div>
       </main>
+
+      {/* Mobile Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 md:hidden z-30"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
     </div>
   );
 }

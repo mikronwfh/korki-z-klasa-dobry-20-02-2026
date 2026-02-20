@@ -120,13 +120,14 @@ export function AdminGallery() {
             <Label htmlFor="gal-published">Opublikowane</Label>
           </div>
 
-          <div className="flex gap-2">
-            <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700">
+          <div className="flex flex-col md:flex-row gap-2">
+            <Button onClick={handleSave} className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
               Zapisz (Ctrl+S)
             </Button>
             <Button
               onClick={resetForm}
               variant="outline"
+              className="w-full md:w-auto"
             >
               Anuluj
             </Button>
@@ -147,7 +148,7 @@ export function AdminGallery() {
             {items.map((item) => (
               <Card key={item.id}>
                 <CardContent className="pt-4">
-                  <div className="flex justify-between items-start">
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-4">
                     <div>
                       <p className="font-medium">{item.title}</p>
                       <p className="text-sm text-muted-foreground">
@@ -157,11 +158,12 @@ export function AdminGallery() {
                         {item.published ? "✓ Opublikowane" : "⊘ Ukryte"}
                       </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-col md:flex-row w-full md:w-auto">
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => handleEdit(item)}
+                        className="w-full md:w-auto"
                       >
                         Edytuj
                       </Button>
@@ -169,6 +171,7 @@ export function AdminGallery() {
                         size="sm"
                         variant="destructive"
                         onClick={() => handleDelete(item.id)}
+                        className="w-full md:w-auto"
                       >
                         Usuń
                       </Button>
