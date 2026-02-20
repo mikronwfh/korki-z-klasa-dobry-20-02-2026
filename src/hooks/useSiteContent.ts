@@ -18,11 +18,13 @@ export function useSiteContent(key: string) {
         .maybeSingle();
 
       if (err) {
+        console.error(`[useSiteContent] Błąd ładowania ${key}:`, err);
         setError(err.message);
         setLoading(false);
         return;
       }
 
+      console.log(`[useSiteContent] Załadowano ${key}:`, data);
       setContent(data);
       setLoading(false);
     };
@@ -34,28 +36,39 @@ export function useSiteContent(key: string) {
     setError(null);
 
     if (!content) {
-      const { error: err } = await supabase.from("site_content").insert({
+      console.log(`[useSiteContent] INSERT ${key}:`, updatedContent);
+      const { data, error: err } = await supabase.from("site_content").insert({
         key,
         content: updatedContent,
-      });
+        published: true,
+      }).select().single();
 
       if (err) {
+        console.error(`[useSiteContent] Błąd INSERT ${key}:`, err);
         setError(err.message);
-        return;
+        throw err;
       }
+
+      console.log(`[useSiteContent] Zapisano (INSERT) ${key}:`, data);
+      setContent(data);
     } else {
-      const { error: err } = await supabase
+      console.log(`[useSiteContent] UPDATE ${key}:`, updatedContent);
+      const { data, error: err } = await supabase
         .from("site_content")
         .update({ content: updatedContent })
-        .eq("id", content.id);
+        .eq("id", content.id)
+        .select()
+        .single();
 
       if (err) {
+        console.error(`[useSiteContent] Błąd UPDATE ${key}:`, err);
         setError(err.message);
-        return;
+        throw err;
       }
-    }
 
-    setContent({ ...content, content: updatedContent });
+      console.log(`[useSiteContent] Zapisano (UPDATE) ${key}:`, data);
+      setContent(data);
+    }
   };
 
   return { content, loading, error, saveContent };
