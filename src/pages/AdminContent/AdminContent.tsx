@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -281,7 +281,7 @@ export function AdminContent() {
     });
   };
 
-  const handleSaveAll = async () => {
+  const handleSaveAll = useCallback(async () => {
     try {
       await handleSaveHero();
       await handleSaveServices();
@@ -302,7 +302,7 @@ export function AdminContent() {
         duration: 5000,
       });
     }
-  };
+  }, [handleSaveHero, handleSaveServices, handleSaveAbout, handleSavePricing, handleSaveCourses, handleSaveContact, toast]);
 
   useCtrlS(handleSaveAll);
 
