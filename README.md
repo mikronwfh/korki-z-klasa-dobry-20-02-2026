@@ -6,7 +6,7 @@
 
 ## ✨ Co to jest?
 
-**Template** do szybkiego tworzenia projektów z automatyczną konfiguracją:
+**Template** do szybkiego tworzenia projektów z automatyczną konfiguracją: 
 
 - ✅ Baza danych **Supabase** (tabele + RLS + migrations)
 - ✅ Użytkownik **admin** 
