@@ -17,8 +17,20 @@ export default function AdminLayout() {
 
   const handleLogout = async () => {
     setLoading(true);
-    await auth.signOut();
-    window.location.href = "/admin";
+    try {
+      const { error } = await auth.signOut();
+      if (error) {
+        console.error("Błąd wylogowania:", error);
+        alert("Błąd wylogowania: " + error.message);
+        setLoading(false);
+        return;
+      }
+      // Wylogowanie udane - przekieruj do logowania
+      window.location.href = "/admin/login";
+    } catch (err) {
+      console.error("Błąd wylogowania:", err);
+      setLoading(false);
+    }
   };
 
   return (
