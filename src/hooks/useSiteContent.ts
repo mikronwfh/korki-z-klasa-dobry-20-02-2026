@@ -15,7 +15,7 @@ export function useSiteContent(key: string) {
         .from("site_content")
         .select("*")
         .eq("key", key)
-        .single();
+        .maybeSingle();
 
       if (err) {
         setError(err.message);

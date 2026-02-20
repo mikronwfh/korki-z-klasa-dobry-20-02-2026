@@ -1,4 +1,5 @@
 import { FormEvent, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -6,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { auth } from "@/services/supabase";
 
 export default function Admin() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,11 +23,14 @@ export default function Admin() {
         return;
       }
 
-      setSessionEmail(data.session?.user.email ?? null);
+      if (data.session?.user.email) {
+        setSessionEmail(data.session.user.email);
+        navigate("/admin");
+      }
     };
 
     void loadSession();
-  }, []);
+  }, [navigate]);
 
   const handleSignIn = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,8 +46,7 @@ export default function Admin() {
     }
 
     setSessionEmail(data.user?.email ?? data.session?.user.email ?? null);
-    setMessage("Zalogowano do panelu admin.");
-    setLoading(false);
+    setTimeout(() => navigate("/admin"), 500);
   };
 
   const handleSignOut = async () => {

@@ -21,17 +21,23 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true,
+        }}
+      >
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/home" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route element={<AdminLayout />}>
-            <Route path="/admin/content" element={<AdminContent />} />
-            <Route path="/admin/gallery" element={<AdminGallery />} />
-            <Route path="/admin/messages" element={<AdminMessages />} />
-            <Route path="/admin/realizations" element={<AdminRealizations />} />
+          <Route path="/admin/login" element={<Admin />} />
+          <Route path="/admin" element={<AdminLayout />}>
+            <Route index element={<AdminContent />} />
+            <Route path="content" element={<AdminContent />} />
+            <Route path="gallery" element={<AdminGallery />} />
+            <Route path="messages" element={<AdminMessages />} />
+            <Route path="realizations" element={<AdminRealizations />} />
           </Route>
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
