@@ -4,10 +4,11 @@ import { auth } from "@/services/supabase";
 import { Button } from "@/components/ui/button";
 
 const adminNavItems = [
-  { label: "Treść", path: "/admin/content" },
-  { label: "Galeria", path: "/admin/gallery" },
-  { label: "Realizacje", path: "/admin/realizations" },
-  { label: "Wiadomości", path: "/admin/messages" },
+  { label: "Oferta", hash: "#uslugi" },
+  { label: "O mnie", hash: "#o-mnie" },
+  { label: "Cennik", hash: "#cennik" },
+  { label: "Kursy online", hash: "#kursy" },
+  { label: "Kontakt", hash: "#kontakt" },
 ];
 
 export default function AdminLayout() {
@@ -31,10 +32,10 @@ export default function AdminLayout() {
         <nav className="flex flex-col gap-2 p-4">
           {adminNavItems.map((item) => (
             <Link
-              key={item.path}
-              to={item.path}
+              key={item.label}
+              to={`/admin${item.hash}`}
               className={`px-4 py-2 rounded text-sm transition-colors ${
-                location.pathname === item.path
+                location.hash === item.hash
                   ? "bg-primary text-primary-foreground font-medium"
                   : "text-muted-foreground hover:text-foreground hover:bg-card/50"
               }`}

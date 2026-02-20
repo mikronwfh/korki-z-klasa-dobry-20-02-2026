@@ -1,5 +1,17 @@
 import { useState } from "react";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
+import { useSiteContent } from "@/hooks/useSiteContent";
+
+const defaultContactContent = {
+  subtitle: "Kontakt",
+  title: "Napisz do nas",
+  description: "Masz pytania? Chętnie pomożemy dobrać odpowiednie zajęcia.",
+  email: "korkizklasa.boleslawiec@gmail.com",
+  phone: "+48 797 239 237",
+  address: "Łokietka 8, Bolesławiec",
+  brand_name: "Korki z Klasą Sandra Wilczyńska",
+  brand_tagline: "Zajęcia stacjonarne i online",
+};
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -9,6 +21,11 @@ const ContactSection = () => {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const { content } = useSiteContent("home_contact");
+  const contact = {
+    ...defaultContactContent,
+    ...(content?.content ?? {}),
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,12 +39,14 @@ const ContactSection = () => {
     <section id="kontakt" className="section-padding bg-background">
       <div className="container mx-auto">
         <div className="text-center mb-12">
-          <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">Kontakt</p>
+          <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">
+            {contact.subtitle}
+          </p>
           <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">
-            Napisz do nas
+            {contact.title}
           </h2>
           <p className="text-muted-foreground mt-3 max-w-lg mx-auto">
-            Masz pytania? Chętnie pomożemy dobrać odpowiednie zajęcia.
+            {contact.description}
           </p>
         </div>
 
@@ -102,8 +121,11 @@ const ContactSection = () => {
                   <Mail size={20} className="text-primary mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-foreground">Email</p>
-                    <a href="mailto:korkizklasa.boleslawiec@gmail.com" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                      korkizklasa.boleslawiec@gmail.com
+                    <a
+                      href={`mailto:${contact.email}`}
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {contact.email}
                     </a>
                   </div>
                 </div>
@@ -111,8 +133,11 @@ const ContactSection = () => {
                   <Phone size={20} className="text-primary mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-foreground">Telefon</p>
-                    <a href="tel:+48797239237" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                      +48 797 239 237
+                    <a
+                      href={`tel:${contact.phone.replace(/\s+/g, "")}`}
+                      className="text-sm text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      {contact.phone}
                     </a>
                   </div>
                 </div>
@@ -121,7 +146,7 @@ const ContactSection = () => {
                   <div>
                     <p className="text-sm font-medium text-foreground">Adres</p>
                     <p className="text-sm text-muted-foreground">
-                      Łokietka 8, Bolesławiec
+                      {contact.address}
                     </p>
                   </div>
                 </div>
@@ -130,10 +155,10 @@ const ContactSection = () => {
 
             <div className="glass-card rounded-xl p-6">
               <p className="text-sm font-semibold text-foreground">
-                Korki z Klasą Sandra Wilczyńska
+                {contact.brand_name}
               </p>
               <p className="text-sm text-muted-foreground mt-1">
-                Zajęcia stacjonarne i online
+                {contact.brand_tagline}
               </p>
             </div>
           </div>
