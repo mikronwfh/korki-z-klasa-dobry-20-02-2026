@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { RichTextEditor } from "@/components/ui/rich-text-editor";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { useCtrlS } from "@/hooks/useCtrlS";
@@ -427,11 +428,10 @@ export function AdminContent() {
 
               <div>
                 <Label htmlFor="hero-subtitle">Podtytuł</Label>
-                <Textarea
-                  id="hero-subtitle"
-                  value={heroSubtitle}
-                  onChange={(e) => setHeroSubtitle(e.target.value)}
-                  rows={3}
+                <RichTextEditor
+                  content={heroSubtitle}
+                  onChange={setHeroSubtitle}
+                  placeholder="Korepetycje indywidualne i kursy grupowe..."
                 />
               </div>
 
@@ -489,15 +489,14 @@ export function AdminContent() {
 
                   <div>
                     <Label htmlFor={`service-desc-${index}`}>Opis</Label>
-                    <Textarea
-                      id={`service-desc-${index}`}
-                      value={item.description}
-                      onChange={(e) => {
+                    <RichTextEditor
+                      content={item.description}
+                      onChange={(html) => {
                         const next = [...serviceItems];
-                        next[index] = { ...next[index], description: e.target.value };
+                        next[index] = { ...next[index], description: html };
                         setServiceItems(next);
                       }}
-                      rows={3}
+                      placeholder="Opis usługi..."
                     />
                   </div>
                 </div>
@@ -546,21 +545,19 @@ export function AdminContent() {
 
               <div>
                 <Label htmlFor="about-paragraph-1">Opis 1</Label>
-                <Textarea
-                  id="about-paragraph-1"
-                  value={aboutParagraph1}
-                  onChange={(e) => setAboutParagraph1(e.target.value)}
-                  rows={4}
+                <RichTextEditor
+                  content={aboutParagraph1}
+                  onChange={setAboutParagraph1}
+                  placeholder="Cześć! Jestem pasjonatką nauczania..."
                 />
               </div>
 
               <div>
                 <Label htmlFor="about-paragraph-2">Opis 2</Label>
-                <Textarea
-                  id="about-paragraph-2"
-                  value={aboutParagraph2}
-                  onChange={(e) => setAboutParagraph2(e.target.value)}
-                  rows={4}
+                <RichTextEditor
+                  content={aboutParagraph2}
+                  onChange={setAboutParagraph2}
+                  placeholder="Moje zajęcia prowadzę w Bolesławcu..."
                 />
               </div>
 

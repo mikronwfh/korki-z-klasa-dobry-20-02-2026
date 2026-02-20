@@ -36,11 +36,6 @@ const AboutSection = () => {
               alt="Sandra Wilczyńska — korepetytorka"
               className="rounded-2xl shadow-2xl w-full object-cover aspect-square"
             />
-            <div className="absolute -bottom-4 -right-4 w-24 h-24 rounded-xl bg-secondary flex items-center justify-center shadow-lg">
-              <span className="text-2xl font-extrabold text-secondary-foreground">
-                {stats[0]?.value ?? ""}
-              </span>
-            </div>
           </div>
 
           <div>
@@ -48,8 +43,14 @@ const AboutSection = () => {
             <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-6">
               {about.name}
             </h2>
-            <p className="text-muted-foreground leading-relaxed mb-6">{about.paragraph_1}</p>
-            <p className="text-muted-foreground leading-relaxed mb-8">{about.paragraph_2}</p>
+            <div 
+              className="text-muted-foreground leading-relaxed mb-6 prose max-w-none"
+              dangerouslySetInnerHTML={{ __html: about.paragraph_1 }}
+            />
+            <div 
+              className="text-muted-foreground leading-relaxed mb-8 prose max-w-none"
+              dangerouslySetInnerHTML={{ __html: about.paragraph_2 }}
+            />
 
             <div className="grid grid-cols-3 gap-4">
               {stats.map((s, index) => {

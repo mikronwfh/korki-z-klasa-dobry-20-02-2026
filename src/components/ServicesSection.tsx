@@ -72,7 +72,10 @@ const ServicesSection = () => {
                 <s.icon className="text-primary" size={24} />
               </div>
               <h3 className="text-lg font-bold text-foreground mb-2">{s.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed">{s.description}</p>
+              <div 
+                className="text-sm text-muted-foreground leading-relaxed prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: s.description }}
+              />
             </div>
           ))}
         </div>

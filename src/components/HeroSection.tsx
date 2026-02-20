@@ -45,11 +45,10 @@ const HeroSection = () => {
           </h1>
 
           <p
-            className="text-lg md:text-xl text-primary-foreground/80 mb-8 max-w-xl animate-fade-in-up"
+            className="text-lg md:text-xl text-primary-foreground/80 mb-8 max-w-xl animate-fade-in-up prose prose-invert max-w-none"
             style={{ animationDelay: "0.2s" }}
-          >
-            {hero.subtitle}
-          </p>
+            dangerouslySetInnerHTML={{ __html: hero.subtitle }}
+          />
 
           <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up" style={{ animationDelay: "0.3s" }}>
             <a
