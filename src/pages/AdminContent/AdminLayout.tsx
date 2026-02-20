@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useLocation, Outlet } from "react-router-dom";
+import { useLocation, Outlet } from "react-router-dom";
 import { auth } from "@/services/supabase";
 import { Button } from "@/components/ui/button";
 
@@ -31,9 +31,9 @@ export default function AdminLayout() {
 
         <nav className="flex flex-col gap-2 p-4">
           {adminNavItems.map((item) => (
-            <Link
+            <a
               key={item.label}
-              to={`/admin${item.hash}`}
+              href={item.hash}
               className={`px-4 py-2 rounded text-sm transition-colors ${
                 location.hash === item.hash
                   ? "bg-primary text-primary-foreground font-medium"
@@ -41,7 +41,7 @@ export default function AdminLayout() {
               }`}
             >
               {item.label}
-            </Link>
+            </a>
           ))}
         </nav>
 
