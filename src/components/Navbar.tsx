@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import logo from "@/assets/logo.jpg";
+import { NavLink } from "./NavLink";
 
 const navLinks = [
   { label: "Oferta", href: "#uslugi" },
@@ -8,6 +9,12 @@ const navLinks = [
   { label: "Cennik", href: "#cennik" },
   { label: "Kursy online", href: "#kursy" },
   { label: "Kontakt", href: "#kontakt" },
+];
+
+const pageLinks = [
+  { label: "Template Home", to: "/home" },
+  { label: "Template About", to: "/about" },
+  { label: "Panel admin", to: "/admin" },
 ];
 
 const Navbar = () => {
@@ -31,6 +38,16 @@ const Navbar = () => {
             >
               {l.label}
             </a>
+          ))}
+          {pageLinks.map((l) => (
+            <NavLink
+              key={l.to}
+              to={l.to}
+              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              activeClassName="text-primary"
+            >
+              {l.label}
+            </NavLink>
           ))}
           <a
             href="#kontakt"
@@ -58,6 +75,17 @@ const Navbar = () => {
             >
               {l.label}
             </a>
+          ))}
+          {pageLinks.map((l) => (
+            <NavLink
+              key={l.to}
+              to={l.to}
+              onClick={() => setOpen(false)}
+              className="block py-2 text-sm font-medium text-muted-foreground hover:text-primary"
+              activeClassName="text-primary"
+            >
+              {l.label}
+            </NavLink>
           ))}
           <a
             href="#kontakt"
