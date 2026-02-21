@@ -5,10 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
 const adminNavItems = [
-  { label: "Oferta", hash: "#uslugi" },
+  { label: "Oferta", hash: "#oferta" },
+  { label: "Nasze usługi", hash: "#uslugi" },
   { label: "O mnie", hash: "#o-mnie" },
   { label: "Cennik", hash: "#cennik" },
   { label: "Kursy online", hash: "#kursy" },
+  { label: "Social media", hash: "#social" },
   { label: "Kontakt", hash: "#kontakt" },
 ];
 
