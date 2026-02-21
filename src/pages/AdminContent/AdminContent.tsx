@@ -32,18 +32,6 @@ const defaultServiceItems = [
     title: "Język angielski",
     description: "Konwersacje, gramatyka, przygotowanie do certyfikatów i matury.",
   },
-  {
-    title: "Zajęcia indywidualne",
-    description: "Dopasowany program do Twoich potrzeb. Elastyczne terminy.",
-  },
-  {
-    title: "Kursy grupowe",
-    description: "Małe grupy, intensywna praca. Motywacja i wsparcie rówieśników.",
-  },
-  {
-    title: "Zajęcia online",
-    description: "Ucz się z dowolnego miejsca. Pełna interakcja jak na żywo.",
-  },
 ];
 
 const defaultAboutContent = {
