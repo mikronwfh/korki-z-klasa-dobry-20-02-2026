@@ -1,4 +1,4 @@
-import { Calculator, FlaskConical, Languages, Users, User, Monitor } from "lucide-react";
+import { Calculator, FlaskConical, Languages } from "lucide-react";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const defaultServices = [
@@ -19,24 +19,6 @@ const defaultServices = [
     icon: Languages,
     title: "Język angielski",
     description: "Konwersacje, gramatyka, przygotowanie do certyfikatów i matury.",
-  },
-  {
-    id: "one",
-    icon: User,
-    title: "Zajęcia indywidualne",
-    description: "Dopasowany program do Twoich potrzeb. Elastyczne terminy.",
-  },
-  {
-    id: "group",
-    icon: Users,
-    title: "Kursy grupowe",
-    description: "Małe grupy, intensywna praca. Motywacja i wsparcie rówieśników.",
-  },
-  {
-    id: "online",
-    icon: Monitor,
-    title: "Zajęcia online",
-    description: "Ucz się z dowolnego miejsca. Pełna interakcja jak na żywo.",
   },
 ];
 
