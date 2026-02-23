@@ -8,6 +8,7 @@ const navLinks = [
   { label: "O mnie", href: "#o-mnie" },
   { label: "Cennik", href: "#cennik" },
   { label: "Kursy online", href: "#kursy" },
+  { label: "Opinie", href: "#opinie" },
   { label: "Kontakt", href: "#kontakt" },
 ];
 

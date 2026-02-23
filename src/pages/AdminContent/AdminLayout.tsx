@@ -11,6 +11,7 @@ const adminNavItems = [
   { label: "Cennik", hash: "#cennik" },
   { label: "Kursy online", hash: "#kursy" },
   { label: "Social media", hash: "#social" },
+  { label: "Opinie", hash: "#opinie" },
   { label: "Kontakt", hash: "#kontakt" },
 ];
 

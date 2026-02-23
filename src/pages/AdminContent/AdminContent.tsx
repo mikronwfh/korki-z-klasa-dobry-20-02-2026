@@ -104,6 +104,50 @@ const defaultSocialContent = {
   url: "https://www.facebook.com/korkizklasa.boleslawiec",
 };
 
+const defaultOpinionsContent = {
+  subtitle: "Opinie",
+  title: "Co mówią uczniowie i rodzice",
+  items: [
+    {
+      text:
+        "Polecam Panią Sandrę, świetnie tłumaczy i ma ogromną cierpliwość. Dzięki Pani Sandrze matematyka już nie jest aż tak straszna dla mojej córki. Na zajęcia uczęszcza z uśmiechem i co najważniejsze nie boi się powiedzieć, że czegoś nie rozumie.",
+      author: "Aneta Śmiałowska",
+    },
+    {
+      text:
+        "Bardzo polecam! Przez kilka lekcji nauczyłam się więcej niż w szkole i zdałam maturę poprawką z języka angielskiego. Lekcje są prowadzone w bardzo miłej atmosferze.",
+      author: "Klaudia Ziobro",
+    },
+    {
+      text: 'Szczerze polecam zajęcia u Pani Sandry, to naprawdę "Korki z klasą".',
+      author: "Aneta Hucał",
+    },
+    {
+      text:
+        "Polecam z całego serca. Korzystaliśmy ze wsparcia i córka otrzymała świetne przygotowanie do testów ósmoklasisty, a teraz korzystamy z zajęć indywidualnych. Wykwalifikowana kadra, a Pani Sandra oddaje swoje serce każdemu uczniowi. POLECAM!! PS. Oczywiście będziemy kontynuować współpracę w następnych latach.",
+      author: "Karolina Prosół",
+    },
+    {
+      text: "Gorąco polecam, wspaniała nauczycielka. Chemia z Panią Sandrą to sama przyjemność.",
+      author: "Julia Hucał",
+    },
+    {
+      text:
+        "Naprawdę z czystym sumieniem mogę polecić korepetycje z Sandrą! Sposób nauczania i atmosfera jest świetna, bardzo zachęcająca do zrozumienia tego, z czym mamy problem. Dzięki niej poradziłam sobie z uporczywym dla mnie materiałem i jestem jej za to niezmiernie wdzięczna.",
+      author: "Paulina Tyszkiewicz",
+    },
+    {
+      text: "Superanckie korki, świetna atmosfera i pełen profesjonalizm.",
+      author: "Marcin Żebrowski",
+    },
+    {
+      text:
+        "Bardzo polecam panią Sandrę, bardzo dobrze tłumaczy, świetna atmosfera na zajęciach. Dzięki pani Sandrze więcej rozumiem, a co najważniejsze ma dużo cierpliwości do mnie.",
+      author: "Maja Śmiałowska",
+    },
+  ],
+};
+
 const defaultContactContent = {
   subtitle: "Kontakt",
   title: "Napisz do nas",
@@ -160,6 +204,12 @@ export function AdminContent() {
     saveContent: saveSocialContent,
   } = useSiteContent("home_social");
   const {
+    content: opinionsContent,
+    loading: opinionsLoading,
+    error: opinionsError,
+    saveContent: saveOpinionsContent,
+  } = useSiteContent("home_opinions");
+  const {
     content: contactContent,
     loading: contactLoading,
     error: contactError,
@@ -205,6 +255,12 @@ export function AdminContent() {
   const [socialCardDescription, setSocialCardDescription] = useState("");
   const [socialHandle, setSocialHandle] = useState("");
   const [socialUrl, setSocialUrl] = useState("");
+
+  const [opinionsSubtitle, setOpinionsSubtitle] = useState("");
+  const [opinionsTitle, setOpinionsTitle] = useState("");
+  const [opinionsItems, setOpinionsItems] = useState(
+    defaultOpinionsContent.items.map((item) => ({ ...item }))
+  );
 
   const [contactSubtitle, setContactSubtitle] = useState("");
   const [contactTitle, setContactTitle] = useState("");
@@ -273,6 +329,14 @@ export function AdminContent() {
     });
   };
 
+  const handleSaveOpinions = async () => {
+    await saveOpinionsContent({
+      subtitle: opinionsSubtitle,
+      title: opinionsTitle,
+      items: opinionsItems,
+    });
+  };
+
   const handleSaveContact = async () => {
     await saveContactContent({
       subtitle: contactSubtitle,
@@ -294,6 +358,7 @@ export function AdminContent() {
       await handleSavePricing();
       await handleSaveCourses();
       await handleSaveSocial();
+      await handleSaveOpinions();
       await handleSaveContact();
       toast({
         title: "✓ Zapisano",
@@ -308,7 +373,7 @@ export function AdminContent() {
         duration: 5000,
       });
     }
-  }, [handleSaveHero, handleSaveServices, handleSaveAbout, handleSavePricing, handleSaveCourses, handleSaveSocial, handleSaveContact, toast]);
+  }, [handleSaveHero, handleSaveServices, handleSaveAbout, handleSavePricing, handleSaveCourses, handleSaveSocial, handleSaveOpinions, handleSaveContact, toast]);
 
   useCtrlS(handleSaveAll);
 
@@ -383,6 +448,18 @@ export function AdminContent() {
     setSocialHandle(social.handle ?? "");
     setSocialUrl(social.url ?? "");
   }, [socialContent]);
+
+  useEffect(() => {
+    const opinions = { ...defaultOpinionsContent, ...(opinionsContent?.content ?? {}) };
+    setOpinionsSubtitle(opinions.subtitle ?? "");
+    setOpinionsTitle(opinions.title ?? "");
+    setOpinionsItems(
+      (opinions.items?.length ? opinions.items : defaultOpinionsContent.items).map((item: any) => ({
+        text: item?.text ?? "",
+        author: item?.author ?? "",
+      }))
+    );
+  }, [opinionsContent]);
 
   useEffect(() => {
     const contact = { ...defaultContactContent, ...(contactContent?.content ?? {}) };
@@ -931,6 +1008,108 @@ export function AdminContent() {
               </div>
 
               {socialError && <p className="text-red-500 text-sm">{socialError}</p>}
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      <section id="opinie" className="space-y-6">
+        <h3 className="text-xl font-bold">Opinie</h3>
+
+        {opinionsLoading ? (
+          <p>Ładowanie...</p>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Opinie</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="opinions-subtitle">Podtytuł</Label>
+                  <Input
+                    id="opinions-subtitle"
+                    value={opinionsSubtitle}
+                    onChange={(e) => setOpinionsSubtitle(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="opinions-title">Tytuł</Label>
+                  <Input
+                    id="opinions-title"
+                    value={opinionsTitle}
+                    onChange={(e) => setOpinionsTitle(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              {opinionsItems.map((item, index) => (
+                <div key={`opinion-${index}`} className="space-y-3 rounded-lg border border-border p-4">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-sm font-semibold text-foreground">Opinia {index + 1}</p>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      disabled={opinionsItems.length <= 1}
+                      onClick={() => {
+                        if (opinionsItems.length <= 1) return;
+                        setOpinionsItems(opinionsItems.filter((_, itemIndex) => itemIndex !== index));
+                      }}
+                    >
+                      Usuń
+                    </Button>
+                  </div>
+                  <div>
+                    <Label htmlFor={`opinion-text-${index}`}>Treść opinii</Label>
+                    <Textarea
+                      id={`opinion-text-${index}`}
+                      value={item.text}
+                      onChange={(e) => {
+                        const next = [...opinionsItems];
+                        next[index] = { ...next[index], text: e.target.value };
+                        setOpinionsItems(next);
+                      }}
+                      rows={4}
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor={`opinion-author-${index}`}>Autor</Label>
+                    <Input
+                      id={`opinion-author-${index}`}
+                      value={item.author}
+                      onChange={(e) => {
+                        const next = [...opinionsItems];
+                        next[index] = { ...next[index], author: e.target.value };
+                        setOpinionsItems(next);
+                      }}
+                    />
+                  </div>
+                </div>
+              ))}
+
+              <div className="flex gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() =>
+                    setOpinionsItems([
+                      ...opinionsItems,
+                      {
+                        text: "",
+                        author: "",
+                      },
+                    ])
+                  }
+                >
+                  Dodaj opinię
+                </Button>
+                <Button onClick={handleSaveOpinions} className="bg-green-600 hover:bg-green-700">
+                  Zapisz
+                </Button>
+              </div>
+
+              {opinionsError && <p className="text-red-500 text-sm">{opinionsError}</p>}
             </CardContent>
           </Card>
         )}
