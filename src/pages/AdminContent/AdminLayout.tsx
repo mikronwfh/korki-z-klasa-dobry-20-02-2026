@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, Outlet } from "react-router-dom";
 import { auth } from "@/services/supabase";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const adminNavItems = [
   { label: "Oferta", hash: "#oferta" },
@@ -19,6 +20,45 @@ export default function AdminLayout() {
   const location = useLocation();
   const [loading, setLoading] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [checkingAccess, setCheckingAccess] = useState(true);
+  const [accessError, setAccessError] = useState("");
+
+  useEffect(() => {
+    const checkAccess = async () => {
+      try {
+        const {
+          data: { session },
+          error: sessionError,
+        } = await auth.getSession();
+
+        if (sessionError || !session?.user?.id) {
+          window.location.href = "/admin/login";
+          return;
+        }
+
+        const { data: profile, error: profileError } = await supabase
+          .from("profiles")
+          .select("role")
+          .eq("user_id", session.user.id)
+          .maybeSingle();
+
+        if (profileError) {
+          setAccessError(profileError.message);
+          return;
+        }
+
+        if (profile?.role !== "admin") {
+          await auth.signOut();
+          window.location.href = "/admin/login";
+          return;
+        }
+      } finally {
+        setCheckingAccess(false);
+      }
+    };
+
+    void checkAccess();
+  }, []);
 
   const handleLogout = async () => {
     setLoading(true);
@@ -37,6 +77,28 @@ export default function AdminLayout() {
       setLoading(false);
     }
   };
+
+  if (checkingAccess) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-muted-foreground">
+        Sprawdzanie uprawnień...
+      </div>
+    );
+  }
+
+  if (accessError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="max-w-lg text-center space-y-3">
+          <h2 className="text-xl font-bold">Brak dostępu do panelu</h2>
+          <p className="text-sm text-muted-foreground">{accessError}</p>
+          <Button onClick={() => (window.location.href = "/admin/login")}>
+            Wróć do logowania
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-screen bg-background flex-col md:flex-row">

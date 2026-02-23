@@ -366,9 +366,13 @@ export function AdminContent() {
         duration: 3000,
       });
     } catch (error) {
+      const description =
+        error instanceof Error
+          ? error.message
+          : "Nie udało się zapisać zmian. Sprawdź uprawnienia w bazie danych.";
       toast({
         title: "Błąd zapisu",
-        description: "Nie udało się zapisać zmian. Sprawdź uprawnienia w bazie danych.",
+        description,
         variant: "destructive",
         duration: 5000,
       });

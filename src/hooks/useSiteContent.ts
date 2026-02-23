@@ -1,6 +1,17 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
+const toFriendlyErrorMessage = (err: any, action: "INSERT" | "UPDATE") => {
+  const code = err?.code ?? "";
+  const message = err?.message ?? "Nieznany błąd zapisu.";
+
+  if (code === "42501") {
+    return "Brak uprawnień do zapisu. Zaloguj się kontem z rolą admin.";
+  }
+
+  return `Błąd ${action}: ${message}`;
+};
+
 export function useSiteContent(key: string) {
   const [content, setContent] = useState<any>(null);
   const [loading, setLoading] = useState(true);
@@ -45,8 +56,9 @@ export function useSiteContent(key: string) {
 
       if (err) {
         console.error(`[useSiteContent] Błąd INSERT ${key}:`, err);
-        setError(err.message);
-        throw err;
+        const friendlyMessage = toFriendlyErrorMessage(err, "INSERT");
+        setError(friendlyMessage);
+        throw new Error(friendlyMessage);
       }
 
       console.log(`[useSiteContent] Zapisano (INSERT) ${key}:`, data);
@@ -62,8 +74,9 @@ export function useSiteContent(key: string) {
 
       if (err) {
         console.error(`[useSiteContent] Błąd UPDATE ${key}:`, err);
-        setError(err.message);
-        throw err;
+        const friendlyMessage = toFriendlyErrorMessage(err, "UPDATE");
+        setError(friendlyMessage);
+        throw new Error(friendlyMessage);
       }
 
       console.log(`[useSiteContent] Zapisano (UPDATE) ${key}:`, data);
