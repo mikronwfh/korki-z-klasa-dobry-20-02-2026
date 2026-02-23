@@ -22,17 +22,22 @@ const defaultHeroContent = {
 const defaultServiceItems = [
   {
     title: "Matematyka",
-    description: "Korepetycje od podstaw po rozszerzenie. Przygotowanie do matury i egzaminów.",
+    description: "Szkoła podstawowa i ponadpodstawowa, bieżąca nauka i skuteczne przygotowanie do egzaminów.",
   },
   {
     title: "Chemia",
-    description: "Zrozumiałe tłumaczenie trudnych zagadnień. Kursy maturalne i pomoc bieżąca.",
+    description: "Zrozumiałe tłumaczenie zagadnień, przygotowanie do testów, kartkówek i konkursów.",
   },
   {
     title: "Język angielski",
-    description: "Konwersacje, gramatyka, przygotowanie do certyfikatów i matury.",
+    description: "Szkoła podstawowa, ponadpodstawowa, egzaminy, konwersacje, Business English.",
   },
 ];
+
+const defaultServicesContent = {
+  subtitle: "CO OFERUJEMY",
+  title: "Przedmioty",
+};
 
 const defaultAboutContent = {
   label: "O mnie",
@@ -223,6 +228,8 @@ export function AdminContent() {
   const [heroCtaPrimary, setHeroCtaPrimary] = useState("");
   const [heroCtaSecondary, setHeroCtaSecondary] = useState("");
 
+  const [servicesSubtitle, setServicesSubtitle] = useState("");
+  const [servicesTitle, setServicesTitle] = useState("");
   const [serviceItems, setServiceItems] = useState(
     defaultServiceItems.map((item) => ({ ...item }))
   );
@@ -284,6 +291,8 @@ export function AdminContent() {
 
   const handleSaveServices = async () => {
     await saveServicesContent({
+      subtitle: servicesSubtitle,
+      title: servicesTitle,
       items: serviceItems,
     });
   };
@@ -392,6 +401,10 @@ export function AdminContent() {
   }, [heroContent]);
 
   useEffect(() => {
+    const services = { ...defaultServicesContent, ...(servicesContent?.content ?? {}) };
+    setServicesSubtitle(services.subtitle ?? "");
+    setServicesTitle(services.title ?? "");
+
     if (servicesContent?.content?.items) {
       const mergedItems = defaultServiceItems.map((item, index) => {
         const override = servicesContent.content.items[index];
@@ -565,16 +578,35 @@ export function AdminContent() {
       </section>
 
       <section id="uslugi" className="space-y-6">
-        <h3 className="text-xl font-bold">Nasze usługi</h3>
+        <h3 className="text-xl font-bold">Przedmioty</h3>
 
         {servicesLoading ? (
           <p>Ładowanie usług...</p>
         ) : (
           <Card>
             <CardHeader>
-              <CardTitle>Nasze usługi</CardTitle>
+              <CardTitle>Przedmioty</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="services-subtitle">Podtytuł</Label>
+                  <Input
+                    id="services-subtitle"
+                    value={servicesSubtitle}
+                    onChange={(e) => setServicesSubtitle(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="services-title">Tytuł</Label>
+                  <Input
+                    id="services-title"
+                    value={servicesTitle}
+                    onChange={(e) => setServicesTitle(e.target.value)}
+                  />
+                </div>
+              </div>
+
               {serviceItems.map((item, index) => (
                 <div key={`service-${index}`} className="space-y-3 rounded-lg border border-border p-4">
                   <div>

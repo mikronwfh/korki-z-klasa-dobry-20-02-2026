@@ -7,7 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const adminNavItems = [
   { label: "Oferta", hash: "#oferta" },
-  { label: "Nasze usługi", hash: "#uslugi" },
+  { label: "Przedmioty", hash: "#uslugi" },
   { label: "O mnie", hash: "#o-mnie" },
   { label: "Cennik", hash: "#cennik" },
   { label: "Kursy online", hash: "#kursy" },
