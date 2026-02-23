@@ -61,50 +61,33 @@ const defaultAboutContent = {
 };
 
 const defaultPricingContent = {
-  subtitle: "Cennik",
-  title: "Przejrzyste ceny",
-  description: "Wybierz opcję dopasowaną do Twoich potrzeb. Bez ukrytych kosztów.",
+  subtitle: "CENNIK",
+  title: "Sprawdź koszt zajęć",
+  description: "",
   plans: [
     {
-      name: "Pojedyncza lekcja",
-      price: "80",
-      unit: "/ 60 min",
-      description: "Idealne na próbę lub doraźną pomoc",
+      name: "Zajęcia indywidualne",
+      price: "130",
+      unit: "/ lekcję",
+      description: "",
       features: [
-        "Zajęcia indywidualne",
-        "Dowolny przedmiot",
+        "Zajęcia 1 na 1",
+        "Dogodny termin i tempo pracy",
         "Stacjonarnie lub online",
-        "Elastyczny termin",
       ],
-      highlighted: false,
+      cta_text: "Zapytaj o termin",
     },
     {
-      name: "Pakiet 10 lekcji",
-      price: "700",
-      unit: "/ 10h",
-      description: "Najpopularniejszy wybór — oszczędzasz 100 zł",
+      name: "Kurs grupowy",
+      price: "60",
+      unit: "/ lekcję",
+      description: "",
       features: [
-        "Zajęcia indywidualne",
-        "Dowolny przedmiot",
-        "Stacjonarnie lub online",
-        "Priorytetowe umawianie",
-        "Materiały dodatkowe",
+        "Przygotowanie do egzaminów",
+        "Małe, kameralne grupy",
+        "Terminy stacjonarnie i online",
       ],
-      highlighted: true,
-    },
-    {
-      name: "Kurs maturalny",
-      price: "150",
-      unit: "/ miesiąc",
-      description: "Intensywne przygotowanie w grupie",
-      features: [
-        "Zajęcia grupowe (max 6 os.)",
-        "2 spotkania tygodniowo",
-        "Próbne matury",
-        "Materiały i testy",
-        "Wsparcie online",
-      ],
-      highlighted: false,
+      cta_text: "Sprawdź grupy",
     },
   ],
 };
@@ -346,9 +329,10 @@ export function AdminContent() {
     setPricingTitle(pricing.title ?? "");
     setPricingDescription(pricing.description ?? "");
     setPricingPlans(
-      (pricing.plans?.length ? pricing.plans : defaultPricingContent.plans).map((plan: any) => ({
+      (pricing.plans?.length ? pricing.plans : defaultPricingContent.plans).slice(0, 2).map((plan: any) => ({
         ...plan,
         features: Array.isArray(plan.features) ? plan.features : [],
+        cta_text: plan.cta_text ?? "Sprawdź",
       }))
     );
   }, [pricingContent]);
@@ -625,7 +609,7 @@ export function AdminContent() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="pricing-title">Przejrzyste ceny</Label>
+                  <Label htmlFor="pricing-title">Sprawdź koszt zajęć</Label>
                   <Input
                     id="pricing-title"
                     value={pricingTitle}
@@ -689,6 +673,18 @@ export function AdminContent() {
                         onChange={(e) => {
                           const next = [...pricingPlans];
                           next[index] = { ...next[index], unit: e.target.value };
+                          setPricingPlans(next);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`plan-cta-${index}`}>Tekst przycisku</Label>
+                      <Input
+                        id={`plan-cta-${index}`}
+                        value={plan.cta_text ?? ""}
+                        onChange={(e) => {
+                          const next = [...pricingPlans];
+                          next[index] = { ...next[index], cta_text: e.target.value };
                           setPricingPlans(next);
                         }}
                       />
