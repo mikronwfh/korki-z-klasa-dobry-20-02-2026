@@ -153,6 +153,30 @@ const defaultOpinionsContent = {
   ],
 };
 
+const defaultEnrollmentContent = {
+  subtitle: "NABÓR NA ROK SZKOLNY 2026/2027",
+  title: "Ruszyły zapisy na zajęcia w roku szkolnym 2026/2027!",
+  description:
+    "Zapraszamy na profesjonalne zajęcia dodatkowe, które wesprą uczniów w systematycznej nauce i przygotowaniu do egzaminów.",
+  note: "Dołącz do naszych kursów w roku szkolnym 2026/2027 — szczegóły wkrótce.",
+  cards: [
+    {
+      title: "Zajęcia indywidualne",
+      description: "Indywidualny tok pracy i program dopasowany do ucznia",
+    },
+    {
+      title: "Kurs do matury",
+      description: "Przygotowanie do matury z matematyki oraz innych przedmiotów",
+    },
+    {
+      title: "Kurs do egzaminu ósmoklasisty",
+      description: "Solidne przygotowanie do egzaminu na zakończenie szkoły podstawowej",
+    },
+  ],
+  cta_text: "Dowiedz się więcej",
+  cta_url: "#kontakt",
+};
+
 const defaultContactContent = {
   subtitle: "Kontakt",
   title: "Napisz do nas",
@@ -215,6 +239,12 @@ export function AdminContent() {
     saveContent: saveOpinionsContent,
   } = useSiteContent("home_opinions");
   const {
+    content: enrollmentContent,
+    loading: enrollmentLoading,
+    error: enrollmentError,
+    saveContent: saveEnrollmentContent,
+  } = useSiteContent("home_enrollment");
+  const {
     content: contactContent,
     loading: contactLoading,
     error: contactError,
@@ -268,6 +298,16 @@ export function AdminContent() {
   const [opinionsItems, setOpinionsItems] = useState(
     defaultOpinionsContent.items.map((item) => ({ ...item }))
   );
+
+  const [enrollmentSubtitle, setEnrollmentSubtitle] = useState("");
+  const [enrollmentTitle, setEnrollmentTitle] = useState("");
+  const [enrollmentDescription, setEnrollmentDescription] = useState("");
+  const [enrollmentNote, setEnrollmentNote] = useState("");
+  const [enrollmentCards, setEnrollmentCards] = useState(
+    defaultEnrollmentContent.cards.map((card) => ({ ...card }))
+  );
+  const [enrollmentCtaText, setEnrollmentCtaText] = useState("");
+  const [enrollmentCtaUrl, setEnrollmentCtaUrl] = useState("");
 
   const [contactSubtitle, setContactSubtitle] = useState("");
   const [contactTitle, setContactTitle] = useState("");
@@ -346,6 +386,18 @@ export function AdminContent() {
     });
   };
 
+  const handleSaveEnrollment = async () => {
+    await saveEnrollmentContent({
+      subtitle: enrollmentSubtitle,
+      title: enrollmentTitle,
+      description: enrollmentDescription,
+      note: enrollmentNote,
+      cards: enrollmentCards,
+      cta_text: enrollmentCtaText,
+      cta_url: enrollmentCtaUrl,
+    });
+  };
+
   const handleSaveContact = async () => {
     await saveContactContent({
       subtitle: contactSubtitle,
@@ -368,6 +420,7 @@ export function AdminContent() {
       await handleSaveCourses();
       await handleSaveSocial();
       await handleSaveOpinions();
+      await handleSaveEnrollment();
       await handleSaveContact();
       toast({
         title: "✓ Zapisano",
@@ -386,7 +439,7 @@ export function AdminContent() {
         duration: 5000,
       });
     }
-  }, [handleSaveHero, handleSaveServices, handleSaveAbout, handleSavePricing, handleSaveCourses, handleSaveSocial, handleSaveOpinions, handleSaveContact, toast]);
+  }, [handleSaveHero, handleSaveServices, handleSaveAbout, handleSavePricing, handleSaveCourses, handleSaveSocial, handleSaveOpinions, handleSaveEnrollment, handleSaveContact, toast]);
 
   useCtrlS(handleSaveAll);
 
@@ -477,6 +530,22 @@ export function AdminContent() {
       }))
     );
   }, [opinionsContent]);
+
+  useEffect(() => {
+    const enrollment = { ...defaultEnrollmentContent, ...(enrollmentContent?.content ?? {}) };
+    setEnrollmentSubtitle(enrollment.subtitle ?? "");
+    setEnrollmentTitle(enrollment.title ?? "");
+    setEnrollmentDescription(enrollment.description ?? "");
+    setEnrollmentNote(enrollment.note ?? "");
+    setEnrollmentCards(
+      (enrollment.cards?.length ? enrollment.cards : defaultEnrollmentContent.cards).slice(0, 3).map((card: any) => ({
+        title: card?.title ?? "",
+        description: card?.description ?? "",
+      }))
+    );
+    setEnrollmentCtaText(enrollment.cta_text ?? "");
+    setEnrollmentCtaUrl(enrollment.cta_url ?? "");
+  }, [enrollmentContent]);
 
   useEffect(() => {
     const contact = { ...defaultContactContent, ...(contactContent?.content ?? {}) };
@@ -1146,6 +1215,118 @@ export function AdminContent() {
               </div>
 
               {opinionsError && <p className="text-red-500 text-sm">{opinionsError}</p>}
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      <section id="nabor" className="space-y-6">
+        <h3 className="text-xl font-bold">Nabór 2026/2027</h3>
+
+        {enrollmentLoading ? (
+          <p>Ładowanie...</p>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Nabór na rok szkolny 2026/2027</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="enrollment-subtitle">Podtytuł</Label>
+                  <Input
+                    id="enrollment-subtitle"
+                    value={enrollmentSubtitle}
+                    onChange={(e) => setEnrollmentSubtitle(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="enrollment-title">Tytuł</Label>
+                  <Input
+                    id="enrollment-title"
+                    value={enrollmentTitle}
+                    onChange={(e) => setEnrollmentTitle(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="enrollment-description">Opis główny</Label>
+                <Textarea
+                  id="enrollment-description"
+                  value={enrollmentDescription}
+                  onChange={(e) => setEnrollmentDescription(e.target.value)}
+                  rows={3}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="enrollment-note">Druga linia opisu</Label>
+                <Input
+                  id="enrollment-note"
+                  value={enrollmentNote}
+                  onChange={(e) => setEnrollmentNote(e.target.value)}
+                />
+              </div>
+
+              <div className="grid md:grid-cols-3 gap-4">
+                {enrollmentCards.map((card, index) => (
+                  <div key={`enrollment-card-${index}`} className="space-y-2 rounded-lg border border-border p-3">
+                    <div>
+                      <Label htmlFor={`enrollment-card-title-${index}`}>Tytuł kafla</Label>
+                      <Input
+                        id={`enrollment-card-title-${index}`}
+                        value={card.title}
+                        onChange={(e) => {
+                          const next = [...enrollmentCards];
+                          next[index] = { ...next[index], title: e.target.value };
+                          setEnrollmentCards(next);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`enrollment-card-desc-${index}`}>Opis kafla</Label>
+                      <Textarea
+                        id={`enrollment-card-desc-${index}`}
+                        value={card.description}
+                        onChange={(e) => {
+                          const next = [...enrollmentCards];
+                          next[index] = { ...next[index], description: e.target.value };
+                          setEnrollmentCards(next);
+                        }}
+                        rows={3}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="enrollment-cta-text">Tekst przycisku</Label>
+                  <Input
+                    id="enrollment-cta-text"
+                    value={enrollmentCtaText}
+                    onChange={(e) => setEnrollmentCtaText(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="enrollment-cta-url">Link przycisku</Label>
+                  <Input
+                    id="enrollment-cta-url"
+                    value={enrollmentCtaUrl}
+                    onChange={(e) => setEnrollmentCtaUrl(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleSaveEnrollment} className="bg-green-600 hover:bg-green-700">
+                  Zapisz
+                </Button>
+              </div>
+
+              {enrollmentError && <p className="text-red-500 text-sm">{enrollmentError}</p>}
             </CardContent>
           </Card>
         )}

@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 const adminNavItems = [
   { label: "Oferta", hash: "#oferta" },
+  { label: "Nabór 2026/2027", hash: "#nabor" },
   { label: "Przedmioty", hash: "#uslugi" },
   { label: "O mnie", hash: "#o-mnie" },
   { label: "Cennik", hash: "#cennik" },
