@@ -177,6 +177,28 @@ const defaultEnrollmentContent = {
   cta_url: "#kontakt",
 };
 
+const defaultLocationContent = {
+  subtitle: "NASZA LOKALIZACJA",
+  title: "Uczymy stacjonarnie — w centrum miasta",
+  description:
+    "Prowadzimy zajęcia w biurze stacjonarnym w centrum Bolesławca. To wygodna lokalizacja z łatwym dojazdem i spokojną przestrzenią do nauki.",
+  note: "Pracujemy również nad otwarciem drugiej lokalizacji w Lubinie — szczegóły wkrótce.",
+  cards: [
+    {
+      title: "Bolesławiec — biuro stacjonarne",
+      description: "Zajęcia indywidualne i kursy grupowe w centrum miasta",
+      status: "active",
+    },
+    {
+      title: "Lubin — w przygotowaniu",
+      description: "Nowa lokalizacja w planach otwarcia",
+      status: "planned",
+    },
+  ],
+  cta_text: "Zapytaj o dostępne miejsca",
+  cta_url: "#kontakt",
+};
+
 const defaultContactContent = {
   subtitle: "Kontakt",
   title: "Napisz do nas",
@@ -245,6 +267,12 @@ export function AdminContent() {
     saveContent: saveEnrollmentContent,
   } = useSiteContent("home_enrollment");
   const {
+    content: locationContent,
+    loading: locationLoading,
+    error: locationError,
+    saveContent: saveLocationContent,
+  } = useSiteContent("home_location");
+  const {
     content: contactContent,
     loading: contactLoading,
     error: contactError,
@@ -308,6 +336,16 @@ export function AdminContent() {
   );
   const [enrollmentCtaText, setEnrollmentCtaText] = useState("");
   const [enrollmentCtaUrl, setEnrollmentCtaUrl] = useState("");
+
+  const [locationSubtitle, setLocationSubtitle] = useState("");
+  const [locationTitle, setLocationTitle] = useState("");
+  const [locationDescription, setLocationDescription] = useState("");
+  const [locationNote, setLocationNote] = useState("");
+  const [locationCards, setLocationCards] = useState(
+    defaultLocationContent.cards.map((card) => ({ ...card }))
+  );
+  const [locationCtaText, setLocationCtaText] = useState("");
+  const [locationCtaUrl, setLocationCtaUrl] = useState("");
 
   const [contactSubtitle, setContactSubtitle] = useState("");
   const [contactTitle, setContactTitle] = useState("");
@@ -398,6 +436,18 @@ export function AdminContent() {
     });
   };
 
+  const handleSaveLocation = async () => {
+    await saveLocationContent({
+      subtitle: locationSubtitle,
+      title: locationTitle,
+      description: locationDescription,
+      note: locationNote,
+      cards: locationCards,
+      cta_text: locationCtaText,
+      cta_url: locationCtaUrl,
+    });
+  };
+
   const handleSaveContact = async () => {
     await saveContactContent({
       subtitle: contactSubtitle,
@@ -421,6 +471,7 @@ export function AdminContent() {
       await handleSaveSocial();
       await handleSaveOpinions();
       await handleSaveEnrollment();
+      await handleSaveLocation();
       await handleSaveContact();
       toast({
         title: "✓ Zapisano",
@@ -439,7 +490,7 @@ export function AdminContent() {
         duration: 5000,
       });
     }
-  }, [handleSaveHero, handleSaveServices, handleSaveAbout, handleSavePricing, handleSaveCourses, handleSaveSocial, handleSaveOpinions, handleSaveEnrollment, handleSaveContact, toast]);
+  }, [handleSaveHero, handleSaveServices, handleSaveAbout, handleSavePricing, handleSaveCourses, handleSaveSocial, handleSaveOpinions, handleSaveEnrollment, handleSaveLocation, handleSaveContact, toast]);
 
   useCtrlS(handleSaveAll);
 
@@ -546,6 +597,23 @@ export function AdminContent() {
     setEnrollmentCtaText(enrollment.cta_text ?? "");
     setEnrollmentCtaUrl(enrollment.cta_url ?? "");
   }, [enrollmentContent]);
+
+  useEffect(() => {
+    const location = { ...defaultLocationContent, ...(locationContent?.content ?? {}) };
+    setLocationSubtitle(location.subtitle ?? "");
+    setLocationTitle(location.title ?? "");
+    setLocationDescription(location.description ?? "");
+    setLocationNote(location.note ?? "");
+    setLocationCards(
+      (location.cards?.length ? location.cards : defaultLocationContent.cards).slice(0, 2).map((card: any) => ({
+        title: card?.title ?? "",
+        description: card?.description ?? "",
+        status: card?.status ?? "active",
+      }))
+    );
+    setLocationCtaText(location.cta_text ?? "");
+    setLocationCtaUrl(location.cta_url ?? "");
+  }, [locationContent]);
 
   useEffect(() => {
     const contact = { ...defaultContactContent, ...(contactContent?.content ?? {}) };
@@ -1327,6 +1395,130 @@ export function AdminContent() {
               </div>
 
               {enrollmentError && <p className="text-red-500 text-sm">{enrollmentError}</p>}
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      <section id="lokalizacja" className="space-y-6">
+        <h3 className="text-xl font-bold">Lokalizacja</h3>
+
+        {locationLoading ? (
+          <p>Ładowanie...</p>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Nasza lokalizacja</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="location-subtitle">Podtytuł</Label>
+                  <Input
+                    id="location-subtitle"
+                    value={locationSubtitle}
+                    onChange={(e) => setLocationSubtitle(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="location-title">Tytuł</Label>
+                  <Input
+                    id="location-title"
+                    value={locationTitle}
+                    onChange={(e) => setLocationTitle(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="location-description">Opis główny</Label>
+                <Textarea
+                  id="location-description"
+                  value={locationDescription}
+                  onChange={(e) => setLocationDescription(e.target.value)}
+                  rows={3}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="location-note">Druga linia opisu</Label>
+                <Input
+                  id="location-note"
+                  value={locationNote}
+                  onChange={(e) => setLocationNote(e.target.value)}
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {locationCards.map((card, index) => (
+                  <div key={`location-card-${index}`} className="space-y-3 rounded-lg border border-border p-4">
+                    <div>
+                      <Label htmlFor={`location-card-title-${index}`}>Tytuł kafla</Label>
+                      <Input
+                        id={`location-card-title-${index}`}
+                        value={card.title}
+                        onChange={(e) => {
+                          const next = [...locationCards];
+                          next[index] = { ...next[index], title: e.target.value };
+                          setLocationCards(next);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`location-card-desc-${index}`}>Opis kafla</Label>
+                      <Textarea
+                        id={`location-card-desc-${index}`}
+                        value={card.description}
+                        onChange={(e) => {
+                          const next = [...locationCards];
+                          next[index] = { ...next[index], description: e.target.value };
+                          setLocationCards(next);
+                        }}
+                        rows={3}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`location-card-status-${index}`}>Status (active/planned)</Label>
+                      <Input
+                        id={`location-card-status-${index}`}
+                        value={card.status ?? ""}
+                        onChange={(e) => {
+                          const next = [...locationCards];
+                          next[index] = { ...next[index], status: e.target.value };
+                          setLocationCards(next);
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="location-cta-text">Tekst przycisku</Label>
+                  <Input
+                    id="location-cta-text"
+                    value={locationCtaText}
+                    onChange={(e) => setLocationCtaText(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="location-cta-url">Link przycisku</Label>
+                  <Input
+                    id="location-cta-url"
+                    value={locationCtaUrl}
+                    onChange={(e) => setLocationCtaUrl(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleSaveLocation} className="bg-green-600 hover:bg-green-700">
+                  Zapisz
+                </Button>
+              </div>
+
+              {locationError && <p className="text-red-500 text-sm">{locationError}</p>}
             </CardContent>
           </Card>
         )}
