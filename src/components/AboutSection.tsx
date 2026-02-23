@@ -40,15 +40,15 @@ const AboutSection = () => {
 
           <div>
             <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">{about.label}</p>
-            <h2 className="text-3xl md:text-4xl font-extrabold text-foreground mb-6">
+            <h2 className="text-4xl md:text-5xl font-extrabold text-foreground mb-6">
               {about.name}
             </h2>
             <div 
-              className="text-muted-foreground leading-relaxed mb-6 prose max-w-none"
+              className="text-base text-muted-foreground leading-relaxed mb-6 prose max-w-none"
               dangerouslySetInnerHTML={{ __html: about.paragraph_1 }}
             />
             <div 
-              className="text-muted-foreground leading-relaxed mb-8 prose max-w-none"
+              className="text-base text-muted-foreground leading-relaxed mb-8 prose max-w-none"
               dangerouslySetInnerHTML={{ __html: about.paragraph_2 }}
             />
 
@@ -57,9 +57,9 @@ const AboutSection = () => {
                 const Icon = statIcons[index] ?? GraduationCap;
                 return (
                   <div key={`${s.label}-${index}`} className="text-center">
-                    <Icon className="mx-auto mb-2 text-primary" size={24} />
-                    <p className="text-xl font-bold text-foreground">{s.value}</p>
-                    <p className="text-xs text-muted-foreground">{s.label}</p>
+                    <Icon className="mx-auto mb-2 text-primary" size={28} />
+                    <p className="text-2xl font-bold text-foreground">{s.value}</p>
+                    <p className="text-sm text-muted-foreground">{s.label}</p>
                   </div>
                 );
               })}

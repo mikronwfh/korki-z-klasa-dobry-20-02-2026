@@ -54,8 +54,8 @@ const EnrollmentSection = () => {
                 <div className="w-14 h-14 rounded-xl bg-primary-foreground/10 flex items-center justify-center mb-5">
                   <Icon size={30} className="text-secondary" />
                 </div>
-                <h3 className="text-4xl font-bold leading-tight mb-3">{card.title}</h3>
-                <p className="text-lg text-primary-foreground/80 leading-relaxed">{card.description}</p>
+                <h3 className="text-2xl font-bold leading-tight mb-3">{card.title}</h3>
+                <p className="text-base text-primary-foreground/80 leading-relaxed">{card.description}</p>
               </article>
             );
           })}

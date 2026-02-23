@@ -5,9 +5,11 @@ import { NavLink } from "./NavLink";
 
 const navLinks = [
   { label: "Oferta", href: "#uslugi" },
+  { label: "Nabór 2026/2027", href: "#nabor" },
+  { label: "Lokalizacja", href: "#lokalizacja" },
   { label: "O mnie", href: "#o-mnie" },
   { label: "Cennik", href: "#cennik" },
-  { label: "Kursy online", href: "#kursy" },
+  { label: "Darmowe materiały", href: "#darmowe-materialy" },
   { label: "Opinie", href: "#opinie" },
   { label: "Kontakt", href: "#kontakt" },
 ];

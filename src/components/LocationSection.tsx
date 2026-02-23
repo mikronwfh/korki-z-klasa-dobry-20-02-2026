@@ -49,15 +49,15 @@ const LocationSection = () => {
               >
                 <div className="flex items-center gap-2 mb-2">
                   {isActive ? (
-                    <CheckCircle2 size={22} className="text-secondary" />
+                    <CheckCircle2 size={24} className="text-secondary" />
                   ) : (
-                    <MapPin size={22} className="text-primary-foreground/45" />
+                    <MapPin size={24} className="text-primary-foreground/45" />
                   )}
-                  <h3 className={isActive ? "text-4xl font-bold leading-tight" : "text-4xl font-bold leading-tight text-primary-foreground/70"}>
+                  <h3 className={isActive ? "text-2xl font-bold leading-tight" : "text-2xl font-bold leading-tight text-primary-foreground/70"}>
                     {card.title}
                   </h3>
                 </div>
-                <p className={isActive ? "text-lg text-primary-foreground/80 leading-relaxed" : "text-lg text-primary-foreground/60 leading-relaxed"}>
+                <p className={isActive ? "text-base text-primary-foreground/80 leading-relaxed" : "text-base text-primary-foreground/60 leading-relaxed"}>
                   {card.description}
                 </p>
 

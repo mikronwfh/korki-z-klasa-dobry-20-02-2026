@@ -49,7 +49,7 @@ const PricingSection = () => {
           <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">
             {pricing.subtitle}
           </p>
-          <h2 className="text-3xl md:text-5xl font-extrabold">
+          <h2 className="text-4xl md:text-5xl font-extrabold">
             {pricing.title}
           </h2>
           {pricing.description ? (
@@ -69,12 +69,12 @@ const PricingSection = () => {
                   return <Icon size={28} className="text-secondary" />;
                 })()}
               </div>
-              <h3 className="text-4xl font-bold mb-1 leading-none">
+              <h3 className="text-2xl font-bold mb-1 leading-none">
                 {p.name}
               </h3>
               {p.description ? <p className="text-sm mb-4 text-primary-foreground/75">{p.description}</p> : null}
               <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-4xl font-extrabold">{p.price} zł</span>
+                <span className="text-3xl font-extrabold">{p.price} zł</span>
                 <span className="text-sm text-primary-foreground/65">
                   {p.unit}
                 </span>

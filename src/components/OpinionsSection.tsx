@@ -55,7 +55,7 @@ const OpinionsSection = () => {
       <div className="container mx-auto">
         <div className="text-center mb-12">
           <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">{opinionsContent.subtitle}</p>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">{opinionsContent.title}</h2>
+          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground">{opinionsContent.title}</h2>
         </div>
 
         <div className="max-w-4xl mx-auto max-h-[560px] overflow-y-auto pr-2 space-y-4">

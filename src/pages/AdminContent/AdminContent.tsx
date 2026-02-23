@@ -199,6 +199,32 @@ const defaultLocationContent = {
   cta_url: "#kontakt",
 };
 
+const defaultFreeMaterialsContent = {
+  subtitle: "DARMOWE MATERIAŁY",
+  title: "YouTube i TikTok",
+  introduction: "Na naszych kanałach w mediach społecznościowych znajdziesz darmowe materiały edukacyjne:",
+  items: [
+    {
+      title: "Tłumaczenia zadań egzaminacyjnych",
+      icon: "book",
+    },
+    {
+      title: "Powtórki do matury i egzaminu ósmoklasisty",
+      icon: "graduate",
+    },
+    {
+      title: "Krótkie lekcje i strategie rozwiązywania zadań",
+      icon: "lightbulb",
+    },
+  ],
+  description:
+    "To świetny sposób, aby zobaczyć nasze metody w praktyce i skorzystać z wiedzy między zajęciami.",
+  youtube_title: "YouTube",
+  youtube_url: "https://www.youtube.com/channel/UCgwe_AWW4WE26N7-jwkLU3Q",
+  tiktok_title: "TikTok",
+  tiktok_url: "https://www.tiktok.com/@korkizklasa",
+};
+
 const defaultContactContent = {
   subtitle: "Kontakt",
   title: "Napisz do nas",
@@ -273,6 +299,12 @@ export function AdminContent() {
     saveContent: saveLocationContent,
   } = useSiteContent("home_location");
   const {
+    content: freeMaterialsContent,
+    loading: freeMaterialsLoading,
+    error: freeMaterialsError,
+    saveContent: saveFreeMaterialsContent,
+  } = useSiteContent("home_free_materials");
+  const {
     content: contactContent,
     loading: contactLoading,
     error: contactError,
@@ -346,6 +378,18 @@ export function AdminContent() {
   );
   const [locationCtaText, setLocationCtaText] = useState("");
   const [locationCtaUrl, setLocationCtaUrl] = useState("");
+
+  const [freeMaterialsSubtitle, setFreeMaterialsSubtitle] = useState("");
+  const [freeMaterialsTitle, setFreeMaterialsTitle] = useState("");
+  const [freeMaterialsIntroduction, setFreeMaterialsIntroduction] = useState("");
+  const [freeMaterialsItems, setFreeMaterialsItems] = useState(
+    defaultFreeMaterialsContent.items.map((item) => ({ ...item }))
+  );
+  const [freeMaterialsDescription, setFreeMaterialsDescription] = useState("");
+  const [youtubeTitle, setYoutubeTitle] = useState("");
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [tiktokTitle, setTiktokTitle] = useState("");
+  const [tiktokUrl, setTiktokUrl] = useState("");
 
   const [contactSubtitle, setContactSubtitle] = useState("");
   const [contactTitle, setContactTitle] = useState("");
@@ -448,6 +492,20 @@ export function AdminContent() {
     });
   };
 
+  const handleSaveFreeMaterials = async () => {
+    await saveFreeMaterialsContent({
+      subtitle: freeMaterialsSubtitle,
+      title: freeMaterialsTitle,
+      introduction: freeMaterialsIntroduction,
+      items: freeMaterialsItems,
+      description: freeMaterialsDescription,
+      youtube_title: youtubeTitle,
+      youtube_url: youtubeUrl,
+      tiktok_title: tiktokTitle,
+      tiktok_url: tiktokUrl,
+    });
+  };
+
   const handleSaveContact = async () => {
     await saveContactContent({
       subtitle: contactSubtitle,
@@ -472,6 +530,7 @@ export function AdminContent() {
       await handleSaveOpinions();
       await handleSaveEnrollment();
       await handleSaveLocation();
+      await handleSaveFreeMaterials();
       await handleSaveContact();
       toast({
         title: "✓ Zapisano",
@@ -614,6 +673,24 @@ export function AdminContent() {
     setLocationCtaText(location.cta_text ?? "");
     setLocationCtaUrl(location.cta_url ?? "");
   }, [locationContent]);
+
+  useEffect(() => {
+    const freeMaterials = { ...defaultFreeMaterialsContent, ...(freeMaterialsContent?.content ?? {}) };
+    setFreeMaterialsSubtitle(freeMaterials.subtitle ?? "");
+    setFreeMaterialsTitle(freeMaterials.title ?? "");
+    setFreeMaterialsIntroduction(freeMaterials.introduction ?? "");
+    setFreeMaterialsItems(
+      (freeMaterials.items?.length ? freeMaterials.items : defaultFreeMaterialsContent.items).slice(0, 3).map((item: any) => ({
+        title: item?.title ?? "",
+        icon: item?.icon ?? "book",
+      }))
+    );
+    setFreeMaterialsDescription(freeMaterials.description ?? "");
+    setYoutubeTitle(freeMaterials.youtube_title ?? "");
+    setYoutubeUrl(freeMaterials.youtube_url ?? "");
+    setTiktokTitle(freeMaterials.tiktok_title ?? "");
+    setTiktokUrl(freeMaterials.tiktok_url ?? "");
+  }, [freeMaterialsContent]);
 
   useEffect(() => {
     const contact = { ...defaultContactContent, ...(contactContent?.content ?? {}) };
@@ -1519,6 +1596,146 @@ export function AdminContent() {
               </div>
 
               {locationError && <p className="text-red-500 text-sm">{locationError}</p>}
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      <section id="darmowe-materialy" className="space-y-6">
+        <h3 className="text-xl font-bold">Darmowe materiały</h3>
+
+        {freeMaterialsLoading ? (
+          <p>Ładowanie...</p>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Darmowe materiały: YouTube i TikTok</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="free-materials-subtitle">Podtytuł</Label>
+                  <Input
+                    id="free-materials-subtitle"
+                    value={freeMaterialsSubtitle}
+                    onChange={(e) => setFreeMaterialsSubtitle(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="free-materials-title">Tytuł</Label>
+                  <Input
+                    id="free-materials-title"
+                    value={freeMaterialsTitle}
+                    onChange={(e) => setFreeMaterialsTitle(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="free-materials-introduction">Wprowadzenie</Label>
+                <Textarea
+                  id="free-materials-introduction"
+                  value={freeMaterialsIntroduction}
+                  onChange={(e) => setFreeMaterialsIntroduction(e.target.value)}
+                  rows={2}
+                />
+              </div>
+
+              <div>
+                <Label>3 punkty materiałów (edytuj poniżej):</Label>
+                <div className="space-y-3">
+                  {freeMaterialsItems.map((item, index) => (
+                    <div key={`free-materials-item-${index}`} className="space-y-2 rounded-lg border border-border p-3">
+                      <div>
+                        <Label htmlFor={`free-materials-item-title-${index}`}>Punkt {index + 1}</Label>
+                        <Input
+                          id={`free-materials-item-title-${index}`}
+                          value={item.title}
+                          onChange={(e) => {
+                            const next = [...freeMaterialsItems];
+                            next[index] = { ...next[index], title: e.target.value };
+                            setFreeMaterialsItems(next);
+                          }}
+                        />
+                      </div>
+                      <div>
+                        <Label htmlFor={`free-materials-item-icon-${index}`}>Ikona (book/graduate/lightbulb)</Label>
+                        <Input
+                          id={`free-materials-item-icon-${index}`}
+                          value={item.icon}
+                          onChange={(e) => {
+                            const next = [...freeMaterialsItems];
+                            next[index] = { ...next[index], icon: e.target.value };
+                            setFreeMaterialsItems(next);
+                          }}
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="free-materials-description">Opis główny</Label>
+                <Textarea
+                  id="free-materials-description"
+                  value={freeMaterialsDescription}
+                  onChange={(e) => setFreeMaterialsDescription(e.target.value)}
+                  rows={3}
+                />
+              </div>
+
+              <div className="border-t pt-6">
+                <h4 className="font-semibold mb-4">Kanały mediów społecznościowych</h4>
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-3">
+                    <div>
+                      <Label htmlFor="youtube-title">Tytuł YouTube</Label>
+                      <Input
+                        id="youtube-title"
+                        value={youtubeTitle}
+                        onChange={(e) => setYoutubeTitle(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="youtube-url">URL YouTube</Label>
+                      <Input
+                        id="youtube-url"
+                        value={youtubeUrl}
+                        onChange={(e) => setYoutubeUrl(e.target.value)}
+                        placeholder="https://www.youtube.com/channel/..."
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-3">
+                    <div>
+                      <Label htmlFor="tiktok-title">Tytuł TikTok</Label>
+                      <Input
+                        id="tiktok-title"
+                        value={tiktokTitle}
+                        onChange={(e) => setTiktokTitle(e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor="tiktok-url">URL TikTok</Label>
+                      <Input
+                        id="tiktok-url"
+                        value={tiktokUrl}
+                        onChange={(e) => setTiktokUrl(e.target.value)}
+                        placeholder="https://www.tiktok.com/@..."
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleSaveFreeMaterials} className="bg-green-600 hover:bg-green-700">
+                  Zapisz
+                </Button>
+              </div>
+
+              {freeMaterialsError && <p className="text-red-500 text-sm">{freeMaterialsError}</p>}
             </CardContent>
           </Card>
         )}

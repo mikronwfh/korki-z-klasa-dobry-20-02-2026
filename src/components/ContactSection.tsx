@@ -42,10 +42,10 @@ const ContactSection = () => {
           <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">
             {contact.subtitle}
           </p>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground">
             {contact.title}
           </h2>
-          <p className="text-muted-foreground mt-3 max-w-lg mx-auto">
+          <p className="text-base text-muted-foreground mt-3 max-w-lg mx-auto">
             {contact.description}
           </p>
         </div>
@@ -118,7 +118,7 @@ const ContactSection = () => {
               <h3 className="font-bold text-foreground mb-4">Dane kontaktowe</h3>
               <div className="flex flex-col gap-4">
                 <div className="flex items-start gap-3">
-                  <Mail size={20} className="text-primary mt-0.5" />
+                  <Mail size={24} className="text-primary mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-foreground">Email</p>
                     <a
@@ -130,7 +130,7 @@ const ContactSection = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Phone size={20} className="text-primary mt-0.5" />
+                  <Phone size={24} className="text-primary mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-foreground">Telefon</p>
                     <a
@@ -142,7 +142,7 @@ const ContactSection = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <MapPin size={20} className="text-primary mt-0.5" />
+                  <MapPin size={24} className="text-primary mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-foreground">Adres</p>
                     <p className="text-sm text-muted-foreground">

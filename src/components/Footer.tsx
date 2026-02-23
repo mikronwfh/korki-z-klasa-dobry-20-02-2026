@@ -18,13 +18,22 @@ const Footer = () => (
         <div>
           <h4 className="font-bold text-background mb-3">Szybkie linki</h4>
           <div className="flex flex-col gap-2">
-            {["Oferta", "O mnie", "Cennik", "Kursy online", "Opinie", "Kontakt"].map((l) => (
+            {[
+              { label: "Oferta", hash: "uslugi" },
+              { label: "Nabór 2026/2027", hash: "nabor" },
+              { label: "Lokalizacja", hash: "lokalizacja" },
+              { label: "O mnie", hash: "o-mnie" },
+              { label: "Cennik", hash: "cennik" },
+              { label: "Darmowe materiały", hash: "darmowe-materialy" },
+              { label: "Opinie", hash: "opinie" },
+              { label: "Kontakt", hash: "kontakt" },
+            ].map((l) => (
               <a
-                key={l}
-                href={`#${l === "Oferta" ? "uslugi" : l === "O mnie" ? "o-mnie" : l === "Kursy online" ? "kursy" : l === "Opinie" ? "opinie" : l.toLowerCase()}`}
+                key={l.hash}
+                href={`#${l.hash}`}
                 className="text-sm text-background/50 hover:text-background transition-colors"
               >
-                {l}
+                {l.label}
               </a>
             ))}
           </div>
