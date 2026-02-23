@@ -58,7 +58,7 @@ export function AdminMessages() {
             <Card key={msg.id} className={msg.is_read ? "" : "border-primary"}>
               <CardContent className="pt-4">
                 <div className="space-y-2">
-                  <div className="flex justify-between items-start">
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2 md:gap-0">
                     <div>
                       <p className="font-medium">{msg.name}</p>
                       <p className="text-sm text-muted-foreground">{msg.email}</p>
@@ -67,7 +67,7 @@ export function AdminMessages() {
                       )}
                     </div>
                     <span
-                      className={`text-xs px-2 py-1 rounded ${
+                      className={`text-xs px-2 py-1 rounded w-fit ${
                         msg.is_read
                           ? "bg-muted text-muted-foreground"
                           : "bg-primary text-primary-foreground"
@@ -82,12 +82,13 @@ export function AdminMessages() {
                   </p>
                 </div>
 
-                <div className="flex gap-2 mt-3">
+                <div className="flex flex-col md:flex-row gap-2 mt-3 w-full">
                   {!msg.is_read && (
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => markAsRead(msg.id)}
+                      className="w-full md:w-auto"
                     >
                       Oznacz jako przeczytane
                     </Button>
@@ -96,6 +97,7 @@ export function AdminMessages() {
                     size="sm"
                     variant="destructive"
                     onClick={() => deleteMessage(msg.id)}
+                    className="w-full md:w-auto"
                   >
                     Usuń
                   </Button>

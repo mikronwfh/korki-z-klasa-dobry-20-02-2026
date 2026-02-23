@@ -32,18 +32,6 @@ const defaultServiceItems = [
     title: "Język angielski",
     description: "Konwersacje, gramatyka, przygotowanie do certyfikatów i matury.",
   },
-  {
-    title: "Zajęcia indywidualne",
-    description: "Dopasowany program do Twoich potrzeb. Elastyczne terminy.",
-  },
-  {
-    title: "Kursy grupowe",
-    description: "Małe grupy, intensywna praca. Motywacja i wsparcie rówieśników.",
-  },
-  {
-    title: "Zajęcia online",
-    description: "Ucz się z dowolnego miejsca. Pełna interakcja jak na żywo.",
-  },
 ];
 
 const defaultAboutContent = {
@@ -106,6 +94,16 @@ const defaultCoursesContent = {
   cta_url: "https://webtolearn.pl",
 };
 
+const defaultSocialContent = {
+  subtitle: "Bądź na bieżąco",
+  title: "Śledź nas w social mediach",
+  card_title: "Facebook",
+  card_description:
+    "Aktualności, porady naukowe i informacje o nowych kursach. Dołącz do naszej społeczności!",
+  handle: "@korkizklasa.boleslawiec →",
+  url: "https://www.facebook.com/korkizklasa.boleslawiec",
+};
+
 const defaultContactContent = {
   subtitle: "Kontakt",
   title: "Napisz do nas",
@@ -156,6 +154,12 @@ export function AdminContent() {
     saveContent: saveCoursesContent,
   } = useSiteContent("home_courses");
   const {
+    content: socialContent,
+    loading: socialLoading,
+    error: socialError,
+    saveContent: saveSocialContent,
+  } = useSiteContent("home_social");
+  const {
     content: contactContent,
     loading: contactLoading,
     error: contactError,
@@ -194,6 +198,13 @@ export function AdminContent() {
   );
   const [coursesCtaText, setCoursesCtaText] = useState("");
   const [coursesCtaUrl, setCoursesCtaUrl] = useState("");
+
+  const [socialSubtitle, setSocialSubtitle] = useState("");
+  const [socialTitle, setSocialTitle] = useState("");
+  const [socialCardTitle, setSocialCardTitle] = useState("");
+  const [socialCardDescription, setSocialCardDescription] = useState("");
+  const [socialHandle, setSocialHandle] = useState("");
+  const [socialUrl, setSocialUrl] = useState("");
 
   const [contactSubtitle, setContactSubtitle] = useState("");
   const [contactTitle, setContactTitle] = useState("");
@@ -251,6 +262,17 @@ export function AdminContent() {
     });
   };
 
+  const handleSaveSocial = async () => {
+    await saveSocialContent({
+      subtitle: socialSubtitle,
+      title: socialTitle,
+      card_title: socialCardTitle,
+      card_description: socialCardDescription,
+      handle: socialHandle,
+      url: socialUrl,
+    });
+  };
+
   const handleSaveContact = async () => {
     await saveContactContent({
       subtitle: contactSubtitle,
@@ -271,6 +293,7 @@ export function AdminContent() {
       await handleSaveAbout();
       await handleSavePricing();
       await handleSaveCourses();
+      await handleSaveSocial();
       await handleSaveContact();
       toast({
         title: "✓ Zapisano",
@@ -285,7 +308,7 @@ export function AdminContent() {
         duration: 5000,
       });
     }
-  }, [handleSaveHero, handleSaveServices, handleSaveAbout, handleSavePricing, handleSaveCourses, handleSaveContact, toast]);
+  }, [handleSaveHero, handleSaveServices, handleSaveAbout, handleSavePricing, handleSaveCourses, handleSaveSocial, handleSaveContact, toast]);
 
   useCtrlS(handleSaveAll);
 
@@ -352,6 +375,16 @@ export function AdminContent() {
   }, [coursesContent]);
 
   useEffect(() => {
+    const social = { ...defaultSocialContent, ...(socialContent?.content ?? {}) };
+    setSocialSubtitle(social.subtitle ?? "");
+    setSocialTitle(social.title ?? "");
+    setSocialCardTitle(social.card_title ?? "");
+    setSocialCardDescription(social.card_description ?? "");
+    setSocialHandle(social.handle ?? "");
+    setSocialUrl(social.url ?? "");
+  }, [socialContent]);
+
+  useEffect(() => {
     const contact = { ...defaultContactContent, ...(contactContent?.content ?? {}) };
     setContactSubtitle(contact.subtitle ?? "");
     setContactTitle(contact.title ?? "");
@@ -365,14 +398,14 @@ export function AdminContent() {
 
   return (
     <div className="space-y-10">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <h2 className="text-2xl font-bold">Panel admin</h2>
-        <Button onClick={handleSaveAll} className="bg-green-600 hover:bg-green-700">
+        <Button onClick={handleSaveAll} className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
           Zapisz wszystko (Ctrl+S)
         </Button>
       </div>
 
-      <section id="uslugi" className="space-y-6">
+      <section id="oferta" className="space-y-6">
         <h3 className="text-xl font-bold">Oferta</h3>
 
         {heroLoading ? (
@@ -447,6 +480,11 @@ export function AdminContent() {
             </CardContent>
           </Card>
         )}
+
+      </section>
+
+      <section id="uslugi" className="space-y-6">
+        <h3 className="text-xl font-bold">Nasze usługi</h3>
 
         {servicesLoading ? (
           <p>Ładowanie usług...</p>
@@ -813,6 +851,86 @@ export function AdminContent() {
               </div>
 
               {coursesError && <p className="text-red-500 text-sm">{coursesError}</p>}
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      <section id="social" className="space-y-6">
+        <h3 className="text-xl font-bold">Social media</h3>
+
+        {socialLoading ? (
+          <p>Ładowanie...</p>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Social media</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="social-subtitle">Bądź na bieżąco</Label>
+                  <Input
+                    id="social-subtitle"
+                    value={socialSubtitle}
+                    onChange={(e) => setSocialSubtitle(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="social-title">Śledź nas w social mediach</Label>
+                  <Input
+                    id="social-title"
+                    value={socialTitle}
+                    onChange={(e) => setSocialTitle(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="social-card-title">Tytuł karty</Label>
+                  <Input
+                    id="social-card-title"
+                    value={socialCardTitle}
+                    onChange={(e) => setSocialCardTitle(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="social-handle">Handle</Label>
+                  <Input
+                    id="social-handle"
+                    value={socialHandle}
+                    onChange={(e) => setSocialHandle(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="social-description">Opis</Label>
+                <Textarea
+                  id="social-description"
+                  value={socialCardDescription}
+                  onChange={(e) => setSocialCardDescription(e.target.value)}
+                  rows={4}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="social-url">Link</Label>
+                <Input
+                  id="social-url"
+                  value={socialUrl}
+                  onChange={(e) => setSocialUrl(e.target.value)}
+                />
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleSaveSocial} className="bg-green-600 hover:bg-green-700">
+                  Zapisz
+                </Button>
+              </div>
+
+              {socialError && <p className="text-red-500 text-sm">{socialError}</p>}
             </CardContent>
           </Card>
         )}
