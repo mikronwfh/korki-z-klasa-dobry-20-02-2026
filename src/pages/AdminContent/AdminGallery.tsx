@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { useGalleryItems } from "@/hooks/useGalleryItems";
+import { GalleryItem, useGalleryItems } from "@/hooks/useGalleryItems";
 import { useCtrlS } from "@/hooks/useCtrlS";
 
 export function AdminGallery() {
@@ -36,7 +36,7 @@ export function AdminGallery() {
         description,
         sort_order: items.length,
         published,
-      } as Omit<any, "id">);
+      } as Omit<GalleryItem, "id">);
       alert("Dodano");
     }
 
@@ -52,7 +52,7 @@ export function AdminGallery() {
     setEditingId(null);
   };
 
-  const handleEdit = (item: any) => {
+  const handleEdit = (item: GalleryItem) => {
     setEditingId(item.id);
     setTitle(item.title);
     setImagePath(item.image_path);

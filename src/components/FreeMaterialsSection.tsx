@@ -28,11 +28,16 @@ const defaultFreeMaterialsContent = {
   tiktok_url: "https://www.tiktok.com/@korkizklasa",
 };
 
-const iconMap: any = {
+type FreeMaterialItem = {
+  title: string;
+  icon?: "book" | "graduate" | "lightbulb" | string;
+};
+
+const iconMap = {
   book: BookOpen,
   graduate: TrendingUp,
   lightbulb: Lightbulb,
-};
+} as const;
 
 const FreeMaterialsSection = () => {
   const { content } = useSiteContent("home_free_materials");
@@ -54,8 +59,9 @@ const FreeMaterialsSection = () => {
             <p className="text-lg text-muted-foreground mb-6">{material.introduction}</p>
 
             <div className="space-y-3 mb-8">
-              {items.map((item: any, index: number) => {
-                const IconComponent = iconMap[item.icon] || BookOpen;
+              {items.map((item: FreeMaterialItem, index: number) => {
+                const iconKey = item.icon as keyof typeof iconMap;
+                const IconComponent = iconMap[iconKey] ?? BookOpen;
 
                 return (
                   <div key={`material-${index}`} className="flex items-center justify-center gap-3">

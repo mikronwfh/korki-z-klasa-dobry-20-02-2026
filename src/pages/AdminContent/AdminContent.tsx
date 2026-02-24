@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -50,6 +50,27 @@ const defaultAboutContent = {
     { label: "Lat doświadczenia", value: "10+" },
     { label: "Zadowolonych uczniów", value: "500+" },
     { label: "Zdawalność matury", value: "98%" },
+  ],
+};
+
+const defaultAwardsContent = {
+  subtitle: "Laureaci plebiscytu",
+  title: "Laureaci Orłów Edukacji 2025 i 2026",
+  description_1:
+    "Zaufali nam uczniowie i rodzice — i to właśnie ich opinie sprawiły, że zostaliśmy laureatami ogólnopolskiego plebiscytu Orły Edukacji dwa lata z rzędu: 2025 i 2026.",
+  description_2:
+    "Dla Ciebie to jasny sygnał: trafiasz do miejsca sprawdzonego, skutecznego i rekomendowanego przez innych rodziców. To wyróżnienie potwierdza, że nasze metody naprawdę przynoszą efekty.",
+  badges: [
+    {
+      title: "ORŁY EDUKACJI",
+      subtitle: "LAUREAT KONKURSU",
+      year: "2025",
+    },
+    {
+      title: "ORŁY EDUKACJI",
+      subtitle: "LAUREAT KONKURSU",
+      year: "2026",
+    },
   ],
 };
 
@@ -263,6 +284,12 @@ export function AdminContent() {
     saveContent: saveAboutContent,
   } = useSiteContent("home_about");
   const {
+    content: awardsContent,
+    loading: awardsLoading,
+    error: awardsError,
+    saveContent: saveAwardsContent,
+  } = useSiteContent("home_awards");
+  const {
     content: pricingContent,
     loading: pricingLoading,
     error: pricingError,
@@ -329,6 +356,14 @@ export function AdminContent() {
   const [aboutParagraph1, setAboutParagraph1] = useState("");
   const [aboutParagraph2, setAboutParagraph2] = useState("");
   const [aboutStats, setAboutStats] = useState(defaultAboutContent.stats.map((s) => ({ ...s })));
+
+  const [awardsSubtitle, setAwardsSubtitle] = useState("");
+  const [awardsTitle, setAwardsTitle] = useState("");
+  const [awardsDescription1, setAwardsDescription1] = useState("");
+  const [awardsDescription2, setAwardsDescription2] = useState("");
+  const [awardsBadges, setAwardsBadges] = useState(
+    defaultAwardsContent.badges.map((badge) => ({ ...badge }))
+  );
 
   const [pricingSubtitle, setPricingSubtitle] = useState("");
   const [pricingTitle, setPricingTitle] = useState("");
@@ -429,6 +464,16 @@ export function AdminContent() {
     });
   };
 
+  const handleSaveAwards = async () => {
+    await saveAwardsContent({
+      subtitle: awardsSubtitle,
+      title: awardsTitle,
+      description_1: awardsDescription1,
+      description_2: awardsDescription2,
+      badges: awardsBadges,
+    });
+  };
+
   const handleSavePricing = async () => {
     await savePricingContent({
       subtitle: pricingSubtitle,
@@ -519,11 +564,12 @@ export function AdminContent() {
     });
   };
 
-  const handleSaveAll = useCallback(async () => {
+  const handleSaveAll = async () => {
     try {
       await handleSaveHero();
       await handleSaveServices();
       await handleSaveAbout();
+      await handleSaveAwards();
       await handleSavePricing();
       await handleSaveCourses();
       await handleSaveSocial();
@@ -549,7 +595,7 @@ export function AdminContent() {
         duration: 5000,
       });
     }
-  }, [handleSaveHero, handleSaveServices, handleSaveAbout, handleSavePricing, handleSaveCourses, handleSaveSocial, handleSaveOpinions, handleSaveEnrollment, handleSaveLocation, handleSaveContact, toast]);
+  };
 
   useCtrlS(handleSaveAll);
 
@@ -588,8 +634,25 @@ export function AdminContent() {
     setAboutName(about.name ?? "");
     setAboutParagraph1(about.paragraph_1 ?? "");
     setAboutParagraph2(about.paragraph_2 ?? "");
-    setAboutStats((about.stats?.length ? about.stats : defaultAboutContent.stats).map((s: any) => ({ ...s })));
+    setAboutStats((about.stats?.length ? about.stats : defaultAboutContent.stats).map((s: (typeof defaultAboutContent.stats)[number]) => ({ ...s })));
   }, [aboutContent]);
+
+  useEffect(() => {
+    const awards = { ...defaultAwardsContent, ...(awardsContent?.content ?? {}) };
+    setAwardsSubtitle(awards.subtitle ?? "");
+    setAwardsTitle(awards.title ?? "");
+    setAwardsDescription1(awards.description_1 ?? "");
+    setAwardsDescription2(awards.description_2 ?? "");
+    setAwardsBadges(
+      (awards.badges?.length ? awards.badges : defaultAwardsContent.badges)
+        .slice(0, 2)
+        .map((badge: (typeof defaultAwardsContent.badges)[number]) => ({
+          title: badge?.title ?? "",
+          subtitle: badge?.subtitle ?? "",
+          year: badge?.year ?? "",
+        }))
+    );
+  }, [awardsContent]);
 
   useEffect(() => {
     const pricing = { ...defaultPricingContent, ...(pricingContent?.content ?? {}) };
@@ -597,7 +660,7 @@ export function AdminContent() {
     setPricingTitle(pricing.title ?? "");
     setPricingDescription(pricing.description ?? "");
     setPricingPlans(
-      (pricing.plans?.length ? pricing.plans : defaultPricingContent.plans).slice(0, 2).map((plan: any) => ({
+      (pricing.plans?.length ? pricing.plans : defaultPricingContent.plans).slice(0, 2).map((plan: (typeof defaultPricingContent.plans)[number]) => ({
         ...plan,
         features: Array.isArray(plan.features) ? plan.features : [],
         cta_text: plan.cta_text ?? "Sprawdź",
@@ -611,7 +674,7 @@ export function AdminContent() {
     setCoursesTitle(courses.title ?? "");
     setCoursesDescription(courses.description ?? "");
     setCoursesFeatures(
-      (courses.features?.length ? courses.features : defaultCoursesContent.features).map((feature: any) => ({
+      (courses.features?.length ? courses.features : defaultCoursesContent.features).map((feature: (typeof defaultCoursesContent.features)[number]) => ({
         ...feature,
       }))
     );
@@ -634,7 +697,7 @@ export function AdminContent() {
     setOpinionsSubtitle(opinions.subtitle ?? "");
     setOpinionsTitle(opinions.title ?? "");
     setOpinionsItems(
-      (opinions.items?.length ? opinions.items : defaultOpinionsContent.items).map((item: any) => ({
+      (opinions.items?.length ? opinions.items : defaultOpinionsContent.items).map((item: (typeof defaultOpinionsContent.items)[number]) => ({
         text: item?.text ?? "",
         author: item?.author ?? "",
       }))
@@ -648,7 +711,7 @@ export function AdminContent() {
     setEnrollmentDescription(enrollment.description ?? "");
     setEnrollmentNote(enrollment.note ?? "");
     setEnrollmentCards(
-      (enrollment.cards?.length ? enrollment.cards : defaultEnrollmentContent.cards).slice(0, 3).map((card: any) => ({
+      (enrollment.cards?.length ? enrollment.cards : defaultEnrollmentContent.cards).slice(0, 3).map((card: (typeof defaultEnrollmentContent.cards)[number]) => ({
         title: card?.title ?? "",
         description: card?.description ?? "",
       }))
@@ -664,7 +727,7 @@ export function AdminContent() {
     setLocationDescription(location.description ?? "");
     setLocationNote(location.note ?? "");
     setLocationCards(
-      (location.cards?.length ? location.cards : defaultLocationContent.cards).slice(0, 2).map((card: any) => ({
+      (location.cards?.length ? location.cards : defaultLocationContent.cards).slice(0, 2).map((card: (typeof defaultLocationContent.cards)[number]) => ({
         title: card?.title ?? "",
         description: card?.description ?? "",
         status: card?.status ?? "active",
@@ -680,7 +743,7 @@ export function AdminContent() {
     setFreeMaterialsTitle(freeMaterials.title ?? "");
     setFreeMaterialsIntroduction(freeMaterials.introduction ?? "");
     setFreeMaterialsItems(
-      (freeMaterials.items?.length ? freeMaterials.items : defaultFreeMaterialsContent.items).slice(0, 3).map((item: any) => ({
+      (freeMaterials.items?.length ? freeMaterials.items : defaultFreeMaterialsContent.items).slice(0, 3).map((item: (typeof defaultFreeMaterialsContent.items)[number]) => ({
         title: item?.title ?? "",
         icon: item?.icon ?? "book",
       }))
@@ -948,6 +1011,111 @@ export function AdminContent() {
               </div>
 
               {aboutError && <p className="text-red-500 text-sm">{aboutError}</p>}
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      <section id="wyroznienia" className="space-y-6">
+        <h3 className="text-xl font-bold">Wyróżnienia</h3>
+
+        {awardsLoading ? (
+          <p>Ładowanie...</p>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Orły Edukacji</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="awards-subtitle">Podtytuł</Label>
+                  <Input
+                    id="awards-subtitle"
+                    value={awardsSubtitle}
+                    onChange={(e) => setAwardsSubtitle(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="awards-title">Tytuł</Label>
+                  <Input
+                    id="awards-title"
+                    value={awardsTitle}
+                    onChange={(e) => setAwardsTitle(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="awards-description-1">Opis 1</Label>
+                <Textarea
+                  id="awards-description-1"
+                  value={awardsDescription1}
+                  onChange={(e) => setAwardsDescription1(e.target.value)}
+                  rows={3}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="awards-description-2">Opis 2</Label>
+                <Textarea
+                  id="awards-description-2"
+                  value={awardsDescription2}
+                  onChange={(e) => setAwardsDescription2(e.target.value)}
+                  rows={3}
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {awardsBadges.map((badge, index) => (
+                  <div key={`awards-badge-${index}`} className="space-y-2 rounded-lg border border-border p-3">
+                    <div>
+                      <Label htmlFor={`awards-badge-title-${index}`}>Nazwa odznaki</Label>
+                      <Input
+                        id={`awards-badge-title-${index}`}
+                        value={badge.title}
+                        onChange={(e) => {
+                          const next = [...awardsBadges];
+                          next[index] = { ...next[index], title: e.target.value };
+                          setAwardsBadges(next);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`awards-badge-subtitle-${index}`}>Podpis odznaki</Label>
+                      <Input
+                        id={`awards-badge-subtitle-${index}`}
+                        value={badge.subtitle}
+                        onChange={(e) => {
+                          const next = [...awardsBadges];
+                          next[index] = { ...next[index], subtitle: e.target.value };
+                          setAwardsBadges(next);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`awards-badge-year-${index}`}>Rok</Label>
+                      <Input
+                        id={`awards-badge-year-${index}`}
+                        value={badge.year}
+                        onChange={(e) => {
+                          const next = [...awardsBadges];
+                          next[index] = { ...next[index], year: e.target.value };
+                          setAwardsBadges(next);
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleSaveAwards} className="bg-green-600 hover:bg-green-700">
+                  Zapisz
+                </Button>
+              </div>
+
+              {awardsError && <p className="text-red-500 text-sm">{awardsError}</p>}
             </CardContent>
           </Card>
         )}

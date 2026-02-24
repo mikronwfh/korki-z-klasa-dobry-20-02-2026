@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
 import { useSiteContent } from "@/hooks/useSiteContent";
+import { supabase } from "@/integrations/supabase/client";
 
 const defaultContactContent = {
   subtitle: "Kontakt",
@@ -21,18 +22,38 @@ const ContactSection = () => {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const { content } = useSiteContent("home_contact");
   const contact = {
     ...defaultContactContent,
     ...(content?.content ?? {}),
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Contact form submitted:", formData);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const payload = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim() || null,
+      message: formData.message.trim(),
+    };
+
+    const { error } = await supabase.from("contact_messages").insert(payload);
+
+    if (error) {
+      setSubmitError("Nie udało się wysłać wiadomości. Spróbuj ponownie za chwilę.");
+      setIsSubmitting(false);
+      return;
+    }
+
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4000);
     setFormData({ name: "", email: "", phone: "", message: "" });
+    setIsSubmitting(false);
   };
 
   return (
@@ -101,11 +122,13 @@ const ContactSection = () => {
             </div>
             <button
               type="submit"
+              disabled={isSubmitting}
               className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               <Send size={18} />
-              Wyślij wiadomość
+              {isSubmitting ? "Wysyłanie..." : "Wyślij wiadomość"}
             </button>
+            {submitError && <p className="text-sm text-destructive text-center">{submitError}</p>}
             {submitted && (
               <p className="text-sm text-accent font-medium text-center animate-fade-in">
                 ✓ Dziękujemy! Odpowiemy najszybciej jak to możliwe.

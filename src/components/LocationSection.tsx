@@ -23,6 +23,12 @@ const defaultLocationContent = {
   cta_url: "#kontakt",
 };
 
+type LocationCard = {
+  title: string;
+  description: string;
+  status?: string;
+};
+
 const LocationSection = () => {
   const { content } = useSiteContent("home_location");
   const location = { ...defaultLocationContent, ...(content?.content ?? {}) };
@@ -39,7 +45,7 @@ const LocationSection = () => {
         </div>
 
         <div className="mt-10 grid md:grid-cols-2 gap-5">
-          {cards.map((card: any, index: number) => {
+          {cards.map((card: LocationCard, index: number) => {
             const isActive = (card?.status ?? "active") === "active";
 
             return (

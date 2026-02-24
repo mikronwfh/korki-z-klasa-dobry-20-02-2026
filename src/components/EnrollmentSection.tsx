@@ -27,6 +27,11 @@ const defaultEnrollmentContent = {
 
 const icons = [UserCheck, GraduationCap, CalendarDays];
 
+type EnrollmentCard = {
+  title: string;
+  description: string;
+};
+
 const EnrollmentSection = () => {
   const { content } = useSiteContent("home_enrollment");
   const enrollment = { ...defaultEnrollmentContent, ...(content?.content ?? {}) };
@@ -43,7 +48,7 @@ const EnrollmentSection = () => {
         </div>
 
         <div className="mt-10 grid md:grid-cols-3 gap-5">
-          {cards.map((card: any, index: number) => {
+          {cards.map((card: EnrollmentCard, index: number) => {
             const Icon = icons[index] ?? UserCheck;
 
             return (

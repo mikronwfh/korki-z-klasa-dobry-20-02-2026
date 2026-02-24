@@ -1,9 +1,20 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-const toFriendlyErrorMessage = (err: any, action: "INSERT" | "UPDATE") => {
-  const code = err?.code ?? "";
-  const message = err?.message ?? "Nieznany błąd zapisu.";
+type SiteContentPayload = Record<string, unknown>;
+
+interface SiteContentRow<T extends SiteContentPayload = SiteContentPayload> {
+  id: string;
+  key: string;
+  content: T;
+  published: boolean;
+  updated_at: string;
+}
+
+const toFriendlyErrorMessage = (err: unknown, action: "INSERT" | "UPDATE") => {
+  const normalizedError = err as { code?: string; message?: string };
+  const code = normalizedError.code ?? "";
+  const message = normalizedError.message ?? "Nieznany błąd zapisu.";
 
   if (code === "42501") {
     return "Brak uprawnień do zapisu. Zaloguj się kontem z rolą admin.";
@@ -12,8 +23,8 @@ const toFriendlyErrorMessage = (err: any, action: "INSERT" | "UPDATE") => {
   return `Błąd ${action}: ${message}`;
 };
 
-export function useSiteContent(key: string) {
-  const [content, setContent] = useState<any>(null);
+export function useSiteContent<T extends SiteContentPayload = SiteContentPayload>(key: string) {
+  const [content, setContent] = useState<SiteContentRow<T> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -43,7 +54,7 @@ export function useSiteContent(key: string) {
     void loadContent();
   }, [key]);
 
-  const saveContent = async (updatedContent: any) => {
+  const saveContent = async (updatedContent: T) => {
     setError(null);
 
     if (!content) {
