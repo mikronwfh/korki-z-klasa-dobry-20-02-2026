@@ -199,21 +199,26 @@ const defaultEnrollmentContent = {
 };
 
 const defaultLocationContent = {
-  subtitle: "NASZA LOKALIZACJA",
-  title: "Uczymy stacjonarnie — w centrum miasta",
+  subtitle: "NASZE LOKALIZACJE I ZAJĘCIA",
+  title: "Uczymy stacjonarnie i online — wybierz najlepszą opcję",
   description:
-    "Prowadzimy zajęcia w biurze stacjonarnym w centrum Bolesławca. To wygodna lokalizacja z łatwym dojazdem i spokojną przestrzenią do nauki.",
-  note: "Pracujemy również nad otwarciem drugiej lokalizacji w Lubinie — szczegóły wkrótce.",
+    "Prowadzimy zajęcia stacjonarne w centrum Bolesławca oraz przygotowujemy nową lokalizację w Lubinie. Możesz też uczyć się z nami online — z dowolnego miejsca.",
+  note: "",
   cards: [
     {
       title: "Bolesławiec — biuro stacjonarne",
-      description: "Zajęcia indywidualne i kursy grupowe w centrum miasta",
+      description: "Zajęcia indywidualne i kursy grupowe w centrum miasta. Spokojna przestrzeń do nauki i łatwy dojazd.",
       status: "active",
     },
     {
       title: "Lubin — w przygotowaniu",
-      description: "Nowa lokalizacja w planach otwarcia",
+      description: "Nowa lokalizacja w planach otwarcia. Zapisy na listę zainteresowanych już wkrótce.",
       status: "planned",
+    },
+    {
+      title: "Zajęcia online — ucz się z dowolnego miejsca",
+      description: "Lekcje indywidualne i kursy przez internet. Ta sama jakość nauczania, bez dojazdów.",
+      status: "online",
     },
   ],
   cta_text: "Zapytaj o dostępne miejsca",
@@ -727,11 +732,14 @@ export function AdminContent() {
     setLocationDescription(location.description ?? "");
     setLocationNote(location.note ?? "");
     setLocationCards(
-      (location.cards?.length ? location.cards : defaultLocationContent.cards).slice(0, 2).map((card: (typeof defaultLocationContent.cards)[number]) => ({
-        title: card?.title ?? "",
-        description: card?.description ?? "",
-        status: card?.status ?? "active",
-      }))
+      defaultLocationContent.cards.map((defaultCard, index) => {
+        const override = location.cards?.[index];
+        return {
+          title: override?.title ?? defaultCard.title,
+          description: override?.description ?? defaultCard.description,
+          status: override?.status ?? defaultCard.status,
+        };
+      })
     );
     setLocationCtaText(location.cta_text ?? "");
     setLocationCtaUrl(location.cta_url ?? "");
@@ -1694,7 +1702,7 @@ export function AdminContent() {
                 />
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-3 gap-4">
                 {locationCards.map((card, index) => (
                   <div key={`location-card-${index}`} className="space-y-3 rounded-lg border border-border p-4">
                     <div>
@@ -1723,7 +1731,7 @@ export function AdminContent() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor={`location-card-status-${index}`}>Status (active/planned)</Label>
+                      <Label htmlFor={`location-card-status-${index}`}>Status (active/planned/online)</Label>
                       <Input
                         id={`location-card-status-${index}`}
                         value={card.status ?? ""}

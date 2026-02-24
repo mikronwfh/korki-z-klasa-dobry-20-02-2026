@@ -1,22 +1,27 @@
-import { ArrowUpRight, CheckCircle2, MapPin } from "lucide-react";
+import { ArrowUpRight, CheckCircle2, Laptop, MapPin } from "lucide-react";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const defaultLocationContent = {
-  subtitle: "NASZA LOKALIZACJA",
-  title: "Uczymy stacjonarnie — w centrum miasta",
+  subtitle: "NASZE LOKALIZACJE I ZAJĘCIA",
+  title: "Uczymy stacjonarnie i online — wybierz najlepszą opcję",
   description:
-    "Prowadzimy zajęcia w biurze stacjonarnym w centrum Bolesławca. To wygodna lokalizacja z łatwym dojazdem i spokojną przestrzenią do nauki.",
-  note: "Pracujemy również nad otwarciem drugiej lokalizacji w Lubinie — szczegóły wkrótce.",
+    "Prowadzimy zajęcia stacjonarne w centrum Bolesławca oraz przygotowujemy nową lokalizację w Lubinie. Możesz też uczyć się z nami online — z dowolnego miejsca.",
+  note: "",
   cards: [
     {
       title: "Bolesławiec — biuro stacjonarne",
-      description: "Zajęcia indywidualne i kursy grupowe w centrum miasta",
+      description: "Zajęcia indywidualne i kursy grupowe w centrum miasta. Spokojna przestrzeń do nauki i łatwy dojazd.",
       status: "active",
     },
     {
       title: "Lubin — w przygotowaniu",
-      description: "Nowa lokalizacja w planach otwarcia",
+      description: "Nowa lokalizacja w planach otwarcia. Zapisy na listę zainteresowanych już wkrótce.",
       status: "planned",
+    },
+    {
+      title: "Zajęcia online — ucz się z dowolnego miejsca",
+      description: "Lekcje indywidualne i kursy przez internet. Ta sama jakość nauczania, bez dojazdów.",
+      status: "online",
     },
   ],
   cta_text: "Zapytaj o dostępne miejsca",
@@ -32,7 +37,15 @@ type LocationCard = {
 const LocationSection = () => {
   const { content } = useSiteContent("home_location");
   const location = { ...defaultLocationContent, ...(content?.content ?? {}) };
-  const cards = (location.cards?.length ? location.cards : defaultLocationContent.cards).slice(0, 2);
+  const cards = defaultLocationContent.cards.map((defaultCard, index) => {
+    const override = location.cards?.[index];
+
+    return {
+      ...defaultCard,
+      ...(override ?? {}),
+      status: override?.status ?? defaultCard.status,
+    };
+  });
 
   return (
     <section id="lokalizacja" className="section-padding bg-primary text-primary-foreground">
@@ -41,12 +54,13 @@ const LocationSection = () => {
           <p className="text-sm font-semibold text-secondary uppercase tracking-[0.15em] mb-3">{location.subtitle}</p>
           <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">{location.title}</h2>
           <p className="mt-4 text-lg text-primary-foreground/80 leading-relaxed">{location.description}</p>
-          <p className="mt-3 text-2xl text-primary-foreground/75">{location.note}</p>
+          {location.note ? <p className="mt-3 text-2xl text-primary-foreground/75">{location.note}</p> : null}
         </div>
 
-        <div className="mt-10 grid md:grid-cols-2 gap-5">
+        <div className="mt-10 grid md:grid-cols-3 gap-5">
           {cards.map((card: LocationCard, index: number) => {
             const isActive = (card?.status ?? "active") === "active";
+            const isOnline = (card?.status ?? "") === "online";
 
             return (
               <article
@@ -54,7 +68,9 @@ const LocationSection = () => {
                 className="rounded-2xl p-6 bg-primary/70 border border-primary-foreground/10 shadow-xl"
               >
                 <div className="flex items-center gap-2 mb-2">
-                  {isActive ? (
+                  {isOnline ? (
+                    <Laptop size={24} className="text-secondary" />
+                  ) : isActive ? (
                     <CheckCircle2 size={24} className="text-secondary" />
                   ) : (
                     <MapPin size={24} className="text-primary-foreground/45" />
@@ -67,14 +83,24 @@ const LocationSection = () => {
                   {card.description}
                 </p>
 
-                <div className={isActive ? "relative mt-5 h-24 rounded-xl overflow-hidden bg-muted/70" : "relative mt-5 h-24 rounded-xl overflow-hidden bg-muted/50"}>
-                  <div className="absolute -left-8 top-8 w-56 h-3 rotate-[-8deg] rounded-full bg-background/40" />
-                  <div className="absolute -right-8 top-5 w-56 h-3 rotate-[10deg] rounded-full bg-background/35" />
-                  <div className="absolute left-10 bottom-6 w-44 h-3 rotate-[3deg] rounded-full bg-background/45" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <MapPin size={42} className={isActive ? "text-secondary" : "text-primary-foreground/35"} />
+                {isOnline ? (
+                  <div className="relative mt-5 h-24 rounded-xl overflow-hidden bg-muted/60">
+                    <div className="absolute left-4 bottom-2 text-4xl">📚</div>
+                    <div className="absolute right-5 bottom-2 text-5xl">💻</div>
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="rounded-full bg-secondary/20 px-3 py-1 text-xs font-semibold text-secondary">ONLINE</div>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div className={isActive ? "relative mt-5 h-24 rounded-xl overflow-hidden bg-muted/70" : "relative mt-5 h-24 rounded-xl overflow-hidden bg-muted/50"}>
+                    <div className="absolute -left-8 top-8 w-56 h-3 rotate-[-8deg] rounded-full bg-background/40" />
+                    <div className="absolute -right-8 top-5 w-56 h-3 rotate-[10deg] rounded-full bg-background/35" />
+                    <div className="absolute left-10 bottom-6 w-44 h-3 rotate-[3deg] rounded-full bg-background/45" />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <MapPin size={42} className={isActive ? "text-secondary" : "text-primary-foreground/35"} />
+                    </div>
+                  </div>
+                )}
               </article>
             );
           })}
