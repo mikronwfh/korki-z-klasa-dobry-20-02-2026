@@ -19,6 +19,23 @@ const defaultHeroContent = {
   cta_secondary_text: "Umów lekcję",
 };
 
+const defaultNavbarContent = {
+  brand_text: "Korki z Klasą",
+  cta_text: "Umów się",
+  cta_href: "#kontakt",
+  links: [
+    { label: "Oferta", href: "#uslugi" },
+    { label: "Nabór 2026/2027", href: "#nabor" },
+    { label: "Lokalizacja", href: "#lokalizacja" },
+    { label: "O mnie", href: "#o-mnie" },
+    { label: "Wyróżnienia", href: "#wyroznienia" },
+    { label: "Cennik", href: "#cennik" },
+    { label: "Darmowe materiały", href: "#darmowe-materialy" },
+    { label: "Opinie", href: "#opinie" },
+    { label: "Kontakt", href: "#kontakt" },
+  ],
+};
+
 const defaultServiceItems = [
   {
     title: "Matematyka",
@@ -262,6 +279,24 @@ const defaultContactContent = {
   brand_tagline: "Zajęcia stacjonarne i online",
 };
 
+const defaultFooterContent = {
+  brand_text: "Korki z Klasą",
+  description: "Profesjonalne korepetycje i kursy maturalne w Bolesławcu i online.",
+  quick_links: [
+    { label: "Oferta", hash: "uslugi" },
+    { label: "Nabór 2026/2027", hash: "nabor" },
+    { label: "Lokalizacja", hash: "lokalizacja" },
+    { label: "O mnie", hash: "o-mnie" },
+    { label: "Wyróżnienia", hash: "wyroznienia" },
+    { label: "Cennik", hash: "cennik" },
+    { label: "Darmowe materiały", hash: "darmowe-materialy" },
+    { label: "Opinie", hash: "opinie" },
+    { label: "Kontakt", hash: "kontakt" },
+  ],
+  facebook_url: "https://www.facebook.com/korkizklasa.boleslawiec",
+  copyright: "© {year} Korki z Klasą — Sandra Wilczyńska. Wszelkie prawa zastrzeżone.",
+};
+
 const toFeatureList = (value: string) =>
   value
     .split("\n")
@@ -276,6 +311,12 @@ export function AdminContent() {
     error: heroError,
     saveContent: saveHeroContent,
   } = useSiteContent("home_hero");
+  const {
+    content: navbarContent,
+    loading: navbarLoading,
+    error: navbarError,
+    saveContent: saveNavbarContent,
+  } = useSiteContent("site_navbar");
   const {
     content: servicesContent,
     loading: servicesLoading,
@@ -342,6 +383,12 @@ export function AdminContent() {
     error: contactError,
     saveContent: saveContactContent,
   } = useSiteContent("home_contact");
+  const {
+    content: footerContent,
+    loading: footerLoading,
+    error: footerError,
+    saveContent: saveFooterContent,
+  } = useSiteContent("site_footer");
 
   const [heroTitleBefore, setHeroTitleBefore] = useState("");
   const [heroTitleHighlight, setHeroTitleHighlight] = useState("");
@@ -349,6 +396,13 @@ export function AdminContent() {
   const [heroSubtitle, setHeroSubtitle] = useState("");
   const [heroCtaPrimary, setHeroCtaPrimary] = useState("");
   const [heroCtaSecondary, setHeroCtaSecondary] = useState("");
+
+  const [navbarBrandText, setNavbarBrandText] = useState("");
+  const [navbarCtaText, setNavbarCtaText] = useState("");
+  const [navbarCtaHref, setNavbarCtaHref] = useState("");
+  const [navbarLinks, setNavbarLinks] = useState(
+    defaultNavbarContent.links.map((link) => ({ ...link }))
+  );
 
   const [servicesSubtitle, setServicesSubtitle] = useState("");
   const [servicesTitle, setServicesTitle] = useState("");
@@ -440,6 +494,14 @@ export function AdminContent() {
   const [contactBrandName, setContactBrandName] = useState("");
   const [contactBrandTagline, setContactBrandTagline] = useState("");
 
+  const [footerBrandText, setFooterBrandText] = useState("");
+  const [footerDescription, setFooterDescription] = useState("");
+  const [footerQuickLinks, setFooterQuickLinks] = useState(
+    defaultFooterContent.quick_links.map((link) => ({ ...link }))
+  );
+  const [footerFacebookUrl, setFooterFacebookUrl] = useState("");
+  const [footerCopyright, setFooterCopyright] = useState("");
+
   const handleSaveHero = async () => {
     await saveHeroContent({
       title_before: heroTitleBefore,
@@ -448,6 +510,15 @@ export function AdminContent() {
       subtitle: heroSubtitle,
       cta_primary_text: heroCtaPrimary,
       cta_secondary_text: heroCtaSecondary,
+    });
+  };
+
+  const handleSaveNavbar = async () => {
+    await saveNavbarContent({
+      brand_text: navbarBrandText,
+      cta_text: navbarCtaText,
+      cta_href: navbarCtaHref,
+      links: navbarLinks,
     });
   };
 
@@ -569,9 +640,20 @@ export function AdminContent() {
     });
   };
 
+  const handleSaveFooter = async () => {
+    await saveFooterContent({
+      brand_text: footerBrandText,
+      description: footerDescription,
+      quick_links: footerQuickLinks,
+      facebook_url: footerFacebookUrl,
+      copyright: footerCopyright,
+    });
+  };
+
   const handleSaveAll = async () => {
     try {
       await handleSaveHero();
+      await handleSaveNavbar();
       await handleSaveServices();
       await handleSaveAbout();
       await handleSaveAwards();
@@ -583,6 +665,7 @@ export function AdminContent() {
       await handleSaveLocation();
       await handleSaveFreeMaterials();
       await handleSaveContact();
+      await handleSaveFooter();
       toast({
         title: "✓ Zapisano",
         description: "Wszystkie zmiany zostały zapisane pomyślnie",
@@ -613,6 +696,22 @@ export function AdminContent() {
     setHeroCtaPrimary(hero.cta_primary_text ?? "");
     setHeroCtaSecondary(hero.cta_secondary_text ?? "");
   }, [heroContent]);
+
+  useEffect(() => {
+    const navbar = { ...defaultNavbarContent, ...(navbarContent?.content ?? {}) };
+    setNavbarBrandText(navbar.brand_text ?? "");
+    setNavbarCtaText(navbar.cta_text ?? "");
+    setNavbarCtaHref(navbar.cta_href ?? "");
+    setNavbarLinks(
+      defaultNavbarContent.links.map((link, index) => {
+        const override = navbar.links?.[index];
+        return {
+          label: override?.label ?? link.label,
+          href: override?.href ?? link.href,
+        };
+      })
+    );
+  }, [navbarContent]);
 
   useEffect(() => {
     const services = { ...defaultServicesContent, ...(servicesContent?.content ?? {}) };
@@ -775,6 +874,23 @@ export function AdminContent() {
     setContactBrandTagline(contact.brand_tagline ?? "");
   }, [contactContent]);
 
+  useEffect(() => {
+    const footer = { ...defaultFooterContent, ...(footerContent?.content ?? {}) };
+    setFooterBrandText(footer.brand_text ?? "");
+    setFooterDescription(footer.description ?? "");
+    setFooterFacebookUrl(footer.facebook_url ?? "");
+    setFooterCopyright(footer.copyright ?? "");
+    setFooterQuickLinks(
+      defaultFooterContent.quick_links.map((link, index) => {
+        const override = footer.quick_links?.[index];
+        return {
+          label: override?.label ?? link.label,
+          hash: override?.hash ?? link.hash,
+        };
+      })
+    );
+  }, [footerContent]);
+
   return (
     <div className="space-y-10">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -783,6 +899,87 @@ export function AdminContent() {
           Zapisz wszystko (Ctrl+S)
         </Button>
       </div>
+
+      <section id="nawigacja" className="space-y-6">
+        <h3 className="text-xl font-bold">Nawigacja</h3>
+
+        {navbarLoading ? (
+          <p>Ładowanie...</p>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Menu górne</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-3 gap-4">
+                <div>
+                  <Label htmlFor="navbar-brand">Nazwa</Label>
+                  <Input
+                    id="navbar-brand"
+                    value={navbarBrandText}
+                    onChange={(e) => setNavbarBrandText(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="navbar-cta-text">Tekst CTA</Label>
+                  <Input
+                    id="navbar-cta-text"
+                    value={navbarCtaText}
+                    onChange={(e) => setNavbarCtaText(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="navbar-cta-href">Link CTA</Label>
+                  <Input
+                    id="navbar-cta-href"
+                    value={navbarCtaHref}
+                    onChange={(e) => setNavbarCtaHref(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {navbarLinks.map((link, index) => (
+                  <div key={`navbar-link-${index}`} className="space-y-2 rounded-lg border border-border p-3">
+                    <div>
+                      <Label htmlFor={`navbar-link-label-${index}`}>Etykieta</Label>
+                      <Input
+                        id={`navbar-link-label-${index}`}
+                        value={link.label}
+                        onChange={(e) => {
+                          const next = [...navbarLinks];
+                          next[index] = { ...next[index], label: e.target.value };
+                          setNavbarLinks(next);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`navbar-link-href-${index}`}>Link</Label>
+                      <Input
+                        id={`navbar-link-href-${index}`}
+                        value={link.href}
+                        onChange={(e) => {
+                          const next = [...navbarLinks];
+                          next[index] = { ...next[index], href: e.target.value };
+                          setNavbarLinks(next);
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleSaveNavbar} className="bg-green-600 hover:bg-green-700">
+                  Zapisz
+                </Button>
+              </div>
+
+              {navbarError && <p className="text-red-500 text-sm">{navbarError}</p>}
+            </CardContent>
+          </Card>
+        )}
+      </section>
 
       <section id="oferta" className="space-y-6">
         <h3 className="text-xl font-bold">Oferta</h3>
@@ -2008,6 +2205,98 @@ export function AdminContent() {
               </div>
 
               {contactError && <p className="text-red-500 text-sm">{contactError}</p>}
+            </CardContent>
+          </Card>
+        )}
+      </section>
+
+      <section id="stopka" className="space-y-6">
+        <h3 className="text-xl font-bold">Stopka</h3>
+
+        {footerLoading ? (
+          <p>Ładowanie...</p>
+        ) : (
+          <Card>
+            <CardHeader>
+              <CardTitle>Treści stopki</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="footer-brand">Nazwa</Label>
+                  <Input
+                    id="footer-brand"
+                    value={footerBrandText}
+                    onChange={(e) => setFooterBrandText(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="footer-facebook">Facebook URL</Label>
+                  <Input
+                    id="footer-facebook"
+                    value={footerFacebookUrl}
+                    onChange={(e) => setFooterFacebookUrl(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="footer-description">Opis</Label>
+                <Textarea
+                  id="footer-description"
+                  value={footerDescription}
+                  onChange={(e) => setFooterDescription(e.target.value)}
+                  rows={3}
+                />
+              </div>
+
+              <div>
+                <Label htmlFor="footer-copyright">Copyright (użyj {"{year}"} jako roku)</Label>
+                <Input
+                  id="footer-copyright"
+                  value={footerCopyright}
+                  onChange={(e) => setFooterCopyright(e.target.value)}
+                />
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                {footerQuickLinks.map((link, index) => (
+                  <div key={`footer-link-${index}`} className="space-y-2 rounded-lg border border-border p-3">
+                    <div>
+                      <Label htmlFor={`footer-link-label-${index}`}>Etykieta</Label>
+                      <Input
+                        id={`footer-link-label-${index}`}
+                        value={link.label}
+                        onChange={(e) => {
+                          const next = [...footerQuickLinks];
+                          next[index] = { ...next[index], label: e.target.value };
+                          setFooterQuickLinks(next);
+                        }}
+                      />
+                    </div>
+                    <div>
+                      <Label htmlFor={`footer-link-hash-${index}`}>Sekcja (hash)</Label>
+                      <Input
+                        id={`footer-link-hash-${index}`}
+                        value={link.hash}
+                        onChange={(e) => {
+                          const next = [...footerQuickLinks];
+                          next[index] = { ...next[index], hash: e.target.value };
+                          setFooterQuickLinks(next);
+                        }}
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex gap-2">
+                <Button onClick={handleSaveFooter} className="bg-green-600 hover:bg-green-700">
+                  Zapisz
+                </Button>
+              </div>
+
+              {footerError && <p className="text-red-500 text-sm">{footerError}</p>}
             </CardContent>
           </Card>
         )}
