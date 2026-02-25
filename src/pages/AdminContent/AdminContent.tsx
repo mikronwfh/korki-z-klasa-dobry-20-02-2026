@@ -27,7 +27,7 @@ const defaultNavbarContent = {
     { label: "Oferta", href: "#uslugi" },
     { label: "Nabór 2026/2027", href: "#nabor" },
     { label: "Lokalizacja", href: "#lokalizacja" },
-    { label: "O mnie", href: "#o-mnie" },
+    { label: "O nas", href: "#o-mnie" },
     { label: "Wyróżnienia", href: "#wyroznienia" },
     { label: "Cennik", href: "#cennik" },
     { label: "Darmowe materiały", href: "#darmowe-materialy" },
@@ -57,7 +57,7 @@ const defaultServicesContent = {
 };
 
 const defaultAboutContent = {
-  label: "O mnie",
+  label: "O nas",
   name: "Sandra Wilczyńska",
   paragraph_1:
     "Cześć! Jestem pasjonatką nauczania z wieloletnim doświadczeniem w przygotowywaniu uczniów do matury z matematyki, chemii i języka angielskiego. Wierzę, że każdy uczeń może osiągnąć sukces — wystarczy odpowiednie podejście i cierpliwość.",
@@ -286,7 +286,7 @@ const defaultFooterContent = {
     { label: "Oferta", hash: "uslugi" },
     { label: "Nabór 2026/2027", hash: "nabor" },
     { label: "Lokalizacja", hash: "lokalizacja" },
-    { label: "O mnie", hash: "o-mnie" },
+    { label: "O nas", hash: "o-mnie" },
     { label: "Wyróżnienia", hash: "wyroznienia" },
     { label: "Cennik", hash: "cennik" },
     { label: "Darmowe materiały", hash: "darmowe-materialy" },
@@ -1132,18 +1132,18 @@ export function AdminContent() {
       </section>
 
       <section id="o-mnie" className="space-y-6">
-        <h3 className="text-xl font-bold">O mnie</h3>
+        <h3 className="text-xl font-bold">O nas</h3>
 
         {aboutLoading ? (
           <p>Ładowanie...</p>
         ) : (
           <Card>
             <CardHeader>
-              <CardTitle>O mnie</CardTitle>
+              <CardTitle>O nas</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <Label htmlFor="about-label">O mnie</Label>
+                <Label htmlFor="about-label">O nas</Label>
                 <Input
                   id="about-label"
                   value={aboutLabel}

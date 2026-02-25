@@ -10,7 +10,7 @@ const adminNavItems = [
   { label: "Nabór 2026/2027", hash: "#nabor" },
   { label: "Lokalizacja", hash: "#lokalizacja" },
   { label: "Przedmioty", hash: "#uslugi" },
-  { label: "O mnie", hash: "#o-mnie" },
+  { label: "O nas", hash: "#o-mnie" },
   { label: "Cennik", hash: "#cennik" },
   { label: "Kursy online", hash: "#kursy" },
   { label: "Social media", hash: "#social" },

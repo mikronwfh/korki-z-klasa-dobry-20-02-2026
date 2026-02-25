@@ -11,7 +11,7 @@ const defaultNavbarContent = {
     { label: "Oferta", href: "#uslugi" },
     { label: "Nabór 2026/2027", href: "#nabor" },
     { label: "Lokalizacja", href: "#lokalizacja" },
-    { label: "O mnie", href: "#o-mnie" },
+    { label: "O nas", href: "#o-mnie" },
     { label: "Wyróżnienia", href: "#wyroznienia" },
     { label: "Cennik", href: "#cennik" },
     { label: "Darmowe materiały", href: "#darmowe-materialy" },

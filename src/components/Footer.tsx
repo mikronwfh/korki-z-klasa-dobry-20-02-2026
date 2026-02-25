@@ -9,7 +9,7 @@ const defaultFooterContent = {
     { label: "Oferta", hash: "uslugi" },
     { label: "Nabór 2026/2027", hash: "nabor" },
     { label: "Lokalizacja", hash: "lokalizacja" },
-    { label: "O mnie", hash: "o-mnie" },
+    { label: "O nas", hash: "o-mnie" },
     { label: "Wyróżnienia", hash: "wyroznienia" },
     { label: "Cennik", hash: "cennik" },
     { label: "Darmowe materiały", hash: "darmowe-materialy" },

@@ -3,7 +3,7 @@ import { Award, GraduationCap, Heart } from "lucide-react";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const defaultAboutContent = {
-  label: "O mnie",
+  label: "O nas",
   name: "Sandra Wilczyńska",
   paragraph_1:
     "Cześć! Jestem pasjonatką nauczania z wieloletnim doświadczeniem w przygotowywaniu uczniów do matury z matematyki, chemii i języka angielskiego. Wierzę, że każdy uczeń może osiągnąć sukces — wystarczy odpowiednie podejście i cierpliwość.",
