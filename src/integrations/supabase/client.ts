@@ -1,15 +1,23 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const configuredSupabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const configuredSupabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(
-    "Brakuje VITE_SUPABASE_URL lub VITE_SUPABASE_ANON_KEY w .env.local"
+const hasSupabaseConfig = Boolean(
+  configuredSupabaseUrl && configuredSupabaseAnonKey
+);
+
+if (!hasSupabaseConfig) {
+  console.error(
+    "Brakuje VITE_SUPABASE_URL lub VITE_SUPABASE_ANON_KEY. Aplikacja uruchomiona w trybie ograniczonym (bez połączenia z Supabase)."
   );
 }
 
+const supabaseUrl = configuredSupabaseUrl ?? "https://example.supabase.co";
+const supabaseAnonKey = configuredSupabaseAnonKey ?? "missing-anon-key";
+
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const isSupabaseConfigured = hasSupabaseConfig;
 
 export const auth = {
   signUp: async (email: string, password: string) => {
