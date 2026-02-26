@@ -1,7 +1,12 @@
 const fs = require("fs");
 
 const hasEnv = fs.existsSync(".env");
-if (hasEnv) process.exit(0);
+const isVercel = process.env.VERCEL === "1" || Boolean(process.env.VERCEL);
+const hasSupabaseEnv = Boolean(
+  process.env.VITE_SUPABASE_URL && process.env.VITE_SUPABASE_ANON_KEY,
+);
+
+if (hasEnv || isVercel || hasSupabaseEnv) process.exit(0);
 
 console.log(`
 Brak pliku .env
