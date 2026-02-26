@@ -71,23 +71,11 @@ const defaultAboutContent = {
 };
 
 const defaultAwardsContent = {
-  subtitle: "Laureaci plebiscytu",
   title: "Laureaci Orłów Edukacji 2025 i 2026",
-  description_1:
-    "Zaufali nam uczniowie i rodzice — i to właśnie ich opinie sprawiły, że zostaliśmy laureatami ogólnopolskiego plebiscytu Orły Edukacji dwa lata z rzędu: 2025 i 2026.",
-  description_2:
-    "Dla Ciebie to jasny sygnał: trafiasz do miejsca sprawdzonego, skutecznego i rekomendowanego przez innych rodziców. To wyróżnienie potwierdza, że nasze metody naprawdę przynoszą efekty.",
-  badges: [
-    {
-      title: "ORŁY EDUKACJI",
-      subtitle: "LAUREAT KONKURSU",
-      year: "2025",
-    },
-    {
-      title: "ORŁY EDUKACJI",
-      subtitle: "LAUREAT KONKURSU",
-      year: "2026",
-    },
+  description:
+    "Zaufali nam uczniowie i rodzice — i to właśnie ich opinie sprawiły, że zostaliśmy laureatami ogólnopolskiego plebiscytu Orły Edukacji dwa lata z rzędu: 2025 i 2026. Dla Ciebie to jasny sygnał: trafiasz do miejsca sprawdzonego, skutecznego i rekomendowanego przez innych rodziców. To wyróżnienie potwierdza, że nasze metody naprawdę przynoszą efekty.",
+  image_2025_url: "",
+  image_2026_url: "",
   ],
 };
 
@@ -416,13 +404,10 @@ export function AdminContent() {
   const [aboutParagraph2, setAboutParagraph2] = useState("");
   const [aboutStats, setAboutStats] = useState(defaultAboutContent.stats.map((s) => ({ ...s })));
 
-  const [awardsSubtitle, setAwardsSubtitle] = useState("");
   const [awardsTitle, setAwardsTitle] = useState("");
-  const [awardsDescription1, setAwardsDescription1] = useState("");
-  const [awardsDescription2, setAwardsDescription2] = useState("");
-  const [awardsBadges, setAwardsBadges] = useState(
-    defaultAwardsContent.badges.map((badge) => ({ ...badge }))
-  );
+  const [awardsDescription, setAwardsDescription] = useState("");
+  const [awardsImage2025Url, setAwardsImage2025Url] = useState("");
+  const [awardsImage2026Url, setAwardsImage2026Url] = useState("");
 
   const [pricingSubtitle, setPricingSubtitle] = useState("");
   const [pricingTitle, setPricingTitle] = useState("");
@@ -542,11 +527,10 @@ export function AdminContent() {
 
   const handleSaveAwards = async () => {
     await saveAwardsContent({
-      subtitle: awardsSubtitle,
       title: awardsTitle,
-      description_1: awardsDescription1,
-      description_2: awardsDescription2,
-      badges: awardsBadges,
+      description: awardsDescription,
+      image_2025_url: awardsImage2025Url,
+      image_2026_url: awardsImage2026Url,
     });
   };
 
@@ -743,19 +727,10 @@ export function AdminContent() {
 
   useEffect(() => {
     const awards = { ...defaultAwardsContent, ...(awardsContent?.content ?? {}) };
-    setAwardsSubtitle(awards.subtitle ?? "");
     setAwardsTitle(awards.title ?? "");
-    setAwardsDescription1(awards.description_1 ?? "");
-    setAwardsDescription2(awards.description_2 ?? "");
-    setAwardsBadges(
-      (awards.badges?.length ? awards.badges : defaultAwardsContent.badges)
-        .slice(0, 2)
-        .map((badge: (typeof defaultAwardsContent.badges)[number]) => ({
-          title: badge?.title ?? "",
-          subtitle: badge?.subtitle ?? "",
-          year: badge?.year ?? "",
-        }))
-    );
+    setAwardsDescription(awards.description ?? "");
+    setAwardsImage2025Url(awards.image_2025_url ?? "");
+    setAwardsImage2026Url(awards.image_2026_url ?? "");
   }, [awardsContent]);
 
   useEffect(() => {
@@ -1252,66 +1227,42 @@ export function AdminContent() {
               </div>
 
               <div>
-                <Label htmlFor="awards-description-1">Opis 1</Label>
+                <Label htmlFor="awards-description">Opis</Label>
                 <Textarea
-                  id="awards-description-1"
-                  value={awardsDescription1}
-                  onChange={(e) => setAwardsDescription1(e.target.value)}
-                  rows={3}
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="awards-description-2">Opis 2</Label>
-                <Textarea
-                  id="awards-description-2"
-                  value={awardsDescription2}
-                  onChange={(e) => setAwardsDescription2(e.target.value)}
-                  rows={3}
+                  id="awards-description"
+                  value={awardsDescription}
+                  onChange={(e) => setAwardsDescription(e.target.value)}
+                  rows={4}
+                  placeholder="Opis wyróżnienia..."
                 />
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
-                {awardsBadges.map((badge, index) => (
-                  <div key={`awards-badge-${index}`} className="space-y-2 rounded-lg border border-border p-3">
-                    <div>
-                      <Label htmlFor={`awards-badge-title-${index}`}>Nazwa odznaki</Label>
-                      <Input
-                        id={`awards-badge-title-${index}`}
-                        value={badge.title}
-                        onChange={(e) => {
-                          const next = [...awardsBadges];
-                          next[index] = { ...next[index], title: e.target.value };
-                          setAwardsBadges(next);
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor={`awards-badge-subtitle-${index}`}>Podpis odznaki</Label>
-                      <Input
-                        id={`awards-badge-subtitle-${index}`}
-                        value={badge.subtitle}
-                        onChange={(e) => {
-                          const next = [...awardsBadges];
-                          next[index] = { ...next[index], subtitle: e.target.value };
-                          setAwardsBadges(next);
-                        }}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor={`awards-badge-year-${index}`}>Rok</Label>
-                      <Input
-                        id={`awards-badge-year-${index}`}
-                        value={badge.year}
-                        onChange={(e) => {
-                          const next = [...awardsBadges];
-                          next[index] = { ...next[index], year: e.target.value };
-                          setAwardsBadges(next);
-                        }}
-                      />
-                    </div>
-                  </div>
-                ))}
+                <div>
+                  <Label htmlFor="awards-image-2025">URL obrazu certyfikatu 2025</Label>
+                  <Input
+                    id="awards-image-2025"
+                    value={awardsImage2025Url}
+                    onChange={(e) => setAwardsImage2025Url(e.target.value)}
+                    placeholder="https://..."
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Wklej URL do obrazu certyfikatu z Supabase Storage
+                  </p>
+                </div>
+
+                <div>
+                  <Label htmlFor="awards-image-2026">URL obrazu certyfikatu 2026</Label>
+                  <Input
+                    id="awards-image-2026"
+                    value={awardsImage2026Url}
+                    onChange={(e) => setAwardsImage2026Url(e.target.value)}
+                    placeholder="https://..."
+                  />
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Wklej URL do obrazu certyfikatu z Supabase Storage
+                  </p>
+                </div>
               </div>
 
               <div className="flex gap-2">
