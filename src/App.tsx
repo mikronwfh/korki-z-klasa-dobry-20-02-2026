@@ -15,6 +15,9 @@ import { AdminMessages } from "./pages/AdminContent/AdminMessages";
 import { AdminRealizations } from "./pages/AdminContent/AdminRealizations";
 
 const queryClient = new QueryClient();
+const routerBasename = import.meta.env.BASE_URL?.startsWith("/")
+  ? import.meta.env.BASE_URL
+  : "/";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -22,7 +25,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter
-        basename={import.meta.env.BASE_URL}
+        basename={routerBasename}
         future={{
           v7_startTransition: true,
           v7_relativeSplatPath: true,
