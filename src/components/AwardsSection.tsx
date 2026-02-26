@@ -1,4 +1,3 @@
-import { Award, Sparkles } from "lucide-react";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const defaultAwardsContent = {
@@ -28,6 +27,11 @@ type AwardBadge = {
   year: string;
 };
 
+const getBadgeImageSrc = (year: string) => {
+  if (year === "2026") return "/images/orly-edukacji-2026.png";
+  return "/images/orly-edukacji-2025.png";
+};
+
 const AwardsSection = () => {
   const { content } = useSiteContent("home_awards");
   const awards = {
@@ -51,16 +55,16 @@ const AwardsSection = () => {
           {badges.map((badge: AwardBadge, index: number) => (
             <article
               key={`${badge.year}-${index}`}
-              className="rounded-2xl border border-secondary/45 bg-secondary/15 p-6 text-center shadow-xl"
+              className="rounded-2xl border border-secondary/45 bg-secondary/15 p-4 text-center shadow-xl sm:p-6"
             >
-              <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-secondary/25">
-                {index === 0 ? <Award className="text-secondary" size={24} /> : <Sparkles className="text-secondary" size={24} />}
+              <div className="mx-auto w-full max-w-[320px]">
+                <img
+                  src={getBadgeImageSrc(badge.year)}
+                  alt={`${badge.title} ${badge.subtitle} ${badge.year}`}
+                  className="h-auto w-full rounded-2xl object-contain"
+                  loading="lazy"
+                />
               </div>
-              <p className="text-xl font-black tracking-wide text-secondary">{badge.title}</p>
-              <p className="mt-2 inline-block rounded-md bg-primary px-3 py-1 text-xs font-semibold tracking-wide text-primary-foreground">
-                {badge.subtitle}
-              </p>
-              <p className="mt-4 text-5xl font-black leading-none">{badge.year}</p>
             </article>
           ))}
         </div>
