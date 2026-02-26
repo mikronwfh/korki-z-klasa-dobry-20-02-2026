@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 280" width="280" height="280">
+  <!-- Tło -->
+  <rect width="280" height="280" fill="#f5e6d3" rx="20"/>
+  
+  <!-- Bordiura -->
+  <rect width="280" height="280" fill="none" stroke="#8b5a2b" stroke-width="4" rx="20"/>
+  
+  <!-- Orzeł (uproszczony) -->
+  <g transform="translate(140, 80)">
+    <!-- Głowa -->
+    <circle cx="0" cy="0" r="25" fill="#daa520"/>
+    <!-- Oko -->
+    <circle cx="-8" cy="-3" r="4" fill="#000"/>
+    <!-- Dziób -->
+    <polygon points="12,-2 22,0 12,2" fill="#8b5a2b"/>
+    <!-- Lewo skrzydło -->
+    <ellipse cx="-30" cy="8" rx="20" ry="35" fill="#daa520" transform="rotate(-25 -30 8)"/>
+    <!-- Prawo skrzydło -->
+    <ellipse cx="30" cy="8" rx="20" ry="35" fill="#daa520" transform="rotate(25 30 8)"/>
+  </g>
+  
+  <!-- Tekst "Orły Edukacji" -->
+  <text x="140" y="160" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#8b5a2b">
+    ORŁY EDUKACJI
+  </text>
+  
+  <!-- Tekst "LAUREAT KONKURSU" -->
+  <text x="140" y="190" font-family="Arial, sans-serif" font-size="14" text-anchor="middle" fill="#8b5a2b">
+    LAUREAT KONKURSU
+  </text>
+  
+  <!-- Roku -->
+  <text x="140" y="225" font-family="Arial, sans-serif" font-size="32" font-weight="bold" text-anchor="middle" fill="#daa520">
+    2026
+  </text>
+</svg>
