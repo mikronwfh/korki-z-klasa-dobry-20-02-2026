@@ -1,51 +1,34 @@
-import { Check } from "lucide-react";
+import { Check, UserCheck, Users } from "lucide-react";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const defaultPricingContent = {
-  subtitle: "Cennik",
-  title: "Przejrzyste ceny",
-  description: "Wybierz opcję dopasowaną do Twoich potrzeb. Bez ukrytych kosztów.",
+  subtitle: "CENNIK",
+  title: "Sprawdź koszt zajęć",
+  description: "",
   plans: [
     {
-      name: "Pojedyncza lekcja",
-      price: "80",
-      unit: "/ 60 min",
-      description: "Idealne na próbę lub doraźną pomoc",
+      name: "Zajęcia indywidualne",
+      price: "130",
+      unit: "/ lekcję",
+      description: "",
       features: [
-        "Zajęcia indywidualne",
-        "Dowolny przedmiot",
+        "Zajęcia 1 na 1",
+        "Dogodny termin i tempo pracy",
         "Stacjonarnie lub online",
-        "Elastyczny termin",
       ],
-      highlighted: false,
+      cta_text: "Zapytaj o termin",
     },
     {
-      name: "Pakiet 10 lekcji",
-      price: "700",
-      unit: "/ 10h",
-      description: "Najpopularniejszy wybór — oszczędzasz 100 zł",
+      name: "Kurs grupowy",
+      price: "60",
+      unit: "/ lekcję",
+      description: "",
       features: [
-        "Zajęcia indywidualne",
-        "Dowolny przedmiot",
-        "Stacjonarnie lub online",
-        "Priorytetowe umawianie",
-        "Materiały dodatkowe",
+        "Przygotowanie do egzaminów",
+        "Małe, kameralne grupy",
+        "Terminy stacjonarnie i online",
       ],
-      highlighted: true,
-    },
-    {
-      name: "Kurs maturalny",
-      price: "150",
-      unit: "/ miesiąc",
-      description: "Intensywne przygotowanie w grupie",
-      features: [
-        "Zajęcia grupowe (max 6 os.)",
-        "2 spotkania tygodniowo",
-        "Próbne matury",
-        "Materiały i testy",
-        "Wsparcie online",
-      ],
-      highlighted: false,
+      cta_text: "Sprawdź grupy",
     },
   ],
 };
@@ -56,66 +39,61 @@ const PricingSection = () => {
     ...defaultPricingContent,
     ...(content?.content ?? {}),
   };
-  const plans = pricing.plans?.length ? pricing.plans : defaultPricingContent.plans;
+  const plans = (pricing.plans?.length ? pricing.plans : defaultPricingContent.plans).slice(0, 2);
+  const planIcons = [UserCheck, Users];
 
   return (
-    <section id="cennik" className="section-padding bg-background">
+    <section id="cennik" className="section-padding bg-primary text-primary-foreground">
       <div className="container mx-auto">
         <div className="text-center mb-12">
           <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">
             {pricing.subtitle}
           </p>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">
+          <h2 className="text-4xl md:text-5xl font-extrabold">
             {pricing.title}
           </h2>
-          <p className="text-muted-foreground mt-3 max-w-lg mx-auto">{pricing.description}</p>
+          {pricing.description ? (
+            <p className="text-primary-foreground/80 mt-3 max-w-lg mx-auto">{pricing.description}</p>
+          ) : null}
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 max-w-5xl mx-auto">
           {plans.map((p, index) => (
             <div
               key={`${p.name}-${index}`}
-              className={`rounded-2xl p-8 transition-all duration-300 ${
-                p.highlighted
-                  ? "bg-primary text-primary-foreground shadow-2xl scale-105 ring-2 ring-secondary"
-                  : "glass-card"
-              }`}
+              className="rounded-2xl p-8 bg-primary/70 border border-primary-foreground/10 shadow-xl flex flex-col"
             >
-              {p.highlighted && (
-                <span className="inline-block bg-secondary text-secondary-foreground text-xs font-bold px-3 py-1 rounded-full mb-4">
-                  Najpopularniejszy
-                </span>
-              )}
-              <h3 className={`text-xl font-bold mb-1 ${p.highlighted ? "" : "text-foreground"}`}>
+              <div className="w-14 h-14 rounded-xl bg-primary-foreground/10 flex items-center justify-center mb-6">
+                {(() => {
+                  const Icon = planIcons[index] ?? Users;
+                  return <Icon size={28} className="text-secondary" />;
+                })()}
+              </div>
+              <h3 className="text-2xl font-bold mb-1 leading-none">
                 {p.name}
               </h3>
-              <p className={`text-sm mb-4 ${p.highlighted ? "text-primary-foreground/70" : "text-muted-foreground"}`}>
-                {p.description}
-              </p>
+              {p.description ? <p className="text-sm mb-4 text-primary-foreground/75">{p.description}</p> : null}
               <div className="flex items-baseline gap-1 mb-6">
-                <span className="text-4xl font-extrabold">{p.price} zł</span>
-                <span className={`text-sm ${p.highlighted ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+                <span className="text-3xl font-extrabold">{p.price} zł</span>
+                <span className="text-sm text-primary-foreground/65">
                   {p.unit}
                 </span>
               </div>
               <ul className="space-y-3 mb-8">
                 {p.features.map((f: string, idx: number) => (
                   <li key={`${f}-${idx}`} className="flex items-center gap-2 text-sm">
-                    <Check size={16} className={p.highlighted ? "text-secondary" : "text-accent"} />
+                    <Check size={16} className="text-secondary" />
                     {f}
                   </li>
                 ))}
               </ul>
               <a
                 href="#kontakt"
-                className={`block text-center rounded-lg py-3 font-semibold transition-colors ${
-                  p.highlighted
-                    ? "bg-secondary text-secondary-foreground hover:bg-secondary/90"
-                    : "bg-primary text-primary-foreground hover:bg-primary/90"
-                }`}
+                className="block text-center rounded-xl py-3 font-semibold transition-colors bg-secondary text-secondary-foreground hover:bg-secondary/90 mt-auto"
               >
-                Wybierz
+                {p.cta_text || "Sprawdź"}
               </a>
+              <div className="h-1 bg-secondary rounded-full mt-5" />
             </div>
           ))}
         </div>

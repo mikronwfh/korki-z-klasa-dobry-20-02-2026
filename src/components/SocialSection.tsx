@@ -22,7 +22,7 @@ const SocialSection = () => {
           <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">
             {social.subtitle}
           </p>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground">
             {social.title}
           </h2>
         </div>
@@ -37,7 +37,7 @@ const SocialSection = () => {
             <div className="w-16 h-16 rounded-full bg-[hsl(220,70%,50%)]/10 flex items-center justify-center group-hover:bg-[hsl(220,70%,50%)]/20 transition-colors">
               <Facebook size={32} className="text-[hsl(220,70%,50%)]" />
             </div>
-            <h3 className="text-xl font-bold text-foreground">{social.card_title}</h3>
+            <h3 className="text-2xl font-bold text-foreground">{social.card_title}</h3>
             <p className="text-sm text-muted-foreground text-center">{social.card_description}</p>
             <span className="text-sm font-semibold text-primary">{social.handle}</span>
           </a>

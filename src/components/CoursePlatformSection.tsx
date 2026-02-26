@@ -30,10 +30,10 @@ const CoursePlatformSection = () => {
         <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">
           {courses.subtitle}
         </p>
-        <h2 className="text-3xl md:text-4xl font-extrabold text-primary-foreground mb-4">
+        <h2 className="text-4xl md:text-5xl font-extrabold text-primary-foreground mb-4">
           {courses.title}
         </h2>
-        <p className="text-primary-foreground/70 max-w-xl mx-auto mb-8">
+        <p className="text-base text-primary-foreground/70 max-w-xl mx-auto mb-8">
           {courses.description}
         </p>
 

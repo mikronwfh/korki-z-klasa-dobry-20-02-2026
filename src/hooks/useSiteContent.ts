@@ -1,8 +1,30 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
-export function useSiteContent(key: string) {
-  const [content, setContent] = useState<any>(null);
+type SiteContentPayload = Record<string, unknown>;
+
+interface SiteContentRow<T extends SiteContentPayload = SiteContentPayload> {
+  id: string;
+  key: string;
+  content: T;
+  published: boolean;
+  updated_at: string;
+}
+
+const toFriendlyErrorMessage = (err: unknown, action: "INSERT" | "UPDATE") => {
+  const normalizedError = err as { code?: string; message?: string };
+  const code = normalizedError.code ?? "";
+  const message = normalizedError.message ?? "Nieznany błąd zapisu.";
+
+  if (code === "42501") {
+    return "Brak uprawnień do zapisu. Zaloguj się kontem z rolą admin.";
+  }
+
+  return `Błąd ${action}: ${message}`;
+};
+
+export function useSiteContent<T extends SiteContentPayload = SiteContentPayload>(key: string) {
+  const [content, setContent] = useState<SiteContentRow<T> | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -32,7 +54,7 @@ export function useSiteContent(key: string) {
     void loadContent();
   }, [key]);
 
-  const saveContent = async (updatedContent: any) => {
+  const saveContent = async (updatedContent: T) => {
     setError(null);
 
     if (!content) {
@@ -45,8 +67,9 @@ export function useSiteContent(key: string) {
 
       if (err) {
         console.error(`[useSiteContent] Błąd INSERT ${key}:`, err);
-        setError(err.message);
-        throw err;
+        const friendlyMessage = toFriendlyErrorMessage(err, "INSERT");
+        setError(friendlyMessage);
+        throw new Error(friendlyMessage);
       }
 
       console.log(`[useSiteContent] Zapisano (INSERT) ${key}:`, data);
@@ -62,8 +85,9 @@ export function useSiteContent(key: string) {
 
       if (err) {
         console.error(`[useSiteContent] Błąd UPDATE ${key}:`, err);
-        setError(err.message);
-        throw err;
+        const friendlyMessage = toFriendlyErrorMessage(err, "UPDATE");
+        setError(friendlyMessage);
+        throw new Error(friendlyMessage);
       }
 
       console.log(`[useSiteContent] Zapisano (UPDATE) ${key}:`, data);

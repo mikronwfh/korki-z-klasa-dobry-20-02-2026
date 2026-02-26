@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Send, Mail, Phone, MapPin } from "lucide-react";
 import { useSiteContent } from "@/hooks/useSiteContent";
+import { supabase } from "@/integrations/supabase/client";
 
 const defaultContactContent = {
   subtitle: "Kontakt",
@@ -21,18 +22,38 @@ const ContactSection = () => {
     message: "",
   });
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
   const { content } = useSiteContent("home_contact");
   const contact = {
     ...defaultContactContent,
     ...(content?.content ?? {}),
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Contact form submitted:", formData);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    const payload = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim() || null,
+      message: formData.message.trim(),
+    };
+
+    const { error } = await supabase.from("contact_messages").insert(payload);
+
+    if (error) {
+      setSubmitError("Nie udało się wysłać wiadomości. Spróbuj ponownie za chwilę.");
+      setIsSubmitting(false);
+      return;
+    }
+
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 4000);
     setFormData({ name: "", email: "", phone: "", message: "" });
+    setIsSubmitting(false);
   };
 
   return (
@@ -42,10 +63,10 @@ const ContactSection = () => {
           <p className="text-sm font-semibold text-secondary uppercase tracking-wider mb-2">
             {contact.subtitle}
           </p>
-          <h2 className="text-3xl md:text-4xl font-extrabold text-foreground">
+          <h2 className="text-4xl md:text-5xl font-extrabold text-foreground">
             {contact.title}
           </h2>
-          <p className="text-muted-foreground mt-3 max-w-lg mx-auto">
+          <p className="text-base text-muted-foreground mt-3 max-w-lg mx-auto">
             {contact.description}
           </p>
         </div>
@@ -101,11 +122,13 @@ const ContactSection = () => {
             </div>
             <button
               type="submit"
+              disabled={isSubmitting}
               className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground hover:bg-primary/90 transition-colors"
             >
               <Send size={18} />
-              Wyślij wiadomość
+              {isSubmitting ? "Wysyłanie..." : "Wyślij wiadomość"}
             </button>
+            {submitError && <p className="text-sm text-destructive text-center">{submitError}</p>}
             {submitted && (
               <p className="text-sm text-accent font-medium text-center animate-fade-in">
                 ✓ Dziękujemy! Odpowiemy najszybciej jak to możliwe.
@@ -118,7 +141,7 @@ const ContactSection = () => {
               <h3 className="font-bold text-foreground mb-4">Dane kontaktowe</h3>
               <div className="flex flex-col gap-4">
                 <div className="flex items-start gap-3">
-                  <Mail size={20} className="text-primary mt-0.5" />
+                  <Mail size={24} className="text-primary mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-foreground">Email</p>
                     <a
@@ -130,7 +153,7 @@ const ContactSection = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Phone size={20} className="text-primary mt-0.5" />
+                  <Phone size={24} className="text-primary mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-foreground">Telefon</p>
                     <a
@@ -142,7 +165,7 @@ const ContactSection = () => {
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
-                  <MapPin size={20} className="text-primary mt-0.5" />
+                  <MapPin size={24} className="text-primary mt-0.5" />
                   <div>
                     <p className="text-sm font-medium text-foreground">Adres</p>
                     <p className="text-sm text-muted-foreground">

@@ -5,6 +5,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { auth } from "@/services/supabase";
+import { supabase } from "@/integrations/supabase/client";
+
+const isAdminUser = async (userId: string) => {
+  const { data, error } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("user_id", userId)
+    .maybeSingle();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  return data?.role === "admin";
+};
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -24,6 +39,14 @@ export default function Admin() {
       }
 
       if (data.session?.user.email) {
+        const admin = await isAdminUser(data.session.user.id);
+        if (!admin) {
+          await auth.signOut();
+          setSessionEmail(null);
+          setMessage("To konto nie ma roli admin i nie może zapisywać zmian.");
+          return;
+        }
+
         setSessionEmail(data.session.user.email);
         navigate("/admin");
       }
@@ -46,6 +69,23 @@ export default function Admin() {
     }
 
     setSessionEmail(data.user?.email ?? data.session?.user.email ?? null);
+    const userId = data.user?.id ?? data.session?.user.id;
+
+    if (!userId) {
+      setMessage("Nie udało się odczytać użytkownika po logowaniu.");
+      setLoading(false);
+      return;
+    }
+
+    const admin = await isAdminUser(userId);
+    if (!admin) {
+      await auth.signOut();
+      setSessionEmail(null);
+      setMessage("To konto nie ma roli admin. Nadaj rolę admin w tabeli profiles.");
+      setLoading(false);
+      return;
+    }
+
     setTimeout(() => navigate("/admin"), 500);
   };
 

@@ -31,12 +31,15 @@ const AwardImage = ({ year }: AwardImageProps) => {
       src={sources[sourceIndex]}
       alt={`Orły Edukacji ${year}`}
       className="mx-auto h-auto w-full max-w-[280px] rounded-2xl object-contain"
+      loading="lazy"
       onError={() => {
-        if (sourceIndex < sources.length - 1) {
-          setSourceIndex(sourceIndex + 1);
-        } else {
-          setUnavailable(true);
+        const nextSourceIndex = sourceIndex + 1;
+        if (nextSourceIndex < sources.length) {
+          setSourceIndex(nextSourceIndex);
+          return;
         }
+
+        setUnavailable(true);
       }}
     />
   );
@@ -44,39 +47,16 @@ const AwardImage = ({ year }: AwardImageProps) => {
 
 const AwardsSection = () => {
   return (
-    <section id="wyroznienia" className="section-padding bg-gradient-to-b from-primary/5 to-transparent">
+    <section id="wyroznienia" className="section-padding bg-primary text-primary-foreground">
       <div className="container mx-auto max-w-6xl">
-        <div className="mb-12 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-primary">
-            Wyróżnienia
-          </p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">
-            Laureaci Orłów Edukacji
-          </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-muted-foreground">
-            Zaufali nam uczniowie i rodzice — to sprawiło, że zostaliśmy laureatami ogólnopolskiego plebiscytu Orły Edukacji dwa lata z rzędu.
-          </p>
-        </div>
-
-        <div className="grid gap-8 md:grid-cols-2">
-          <div className="flex flex-col items-center rounded-3xl border border-border/50 bg-card p-8 shadow-lg">
+        <div className="mx-auto grid max-w-3xl gap-5 sm:grid-cols-2">
+          <div className="rounded-2xl border border-secondary/45 bg-secondary/15 p-4 text-center shadow-xl sm:p-6">
             <AwardImage year="2025" />
-            <p className="mt-6 text-center text-sm text-muted-foreground">
-              Laureat plebiscytu Orły Edukacji 2025
-            </p>
           </div>
-          <div className="flex flex-col items-center rounded-3xl border border-border/50 bg-card p-8 shadow-lg">
-            <AwardImage year="2026" />
-            <p className="mt-6 text-center text-sm text-muted-foreground">
-              Laureat plebiscytu Orły Edukacji 2026
-            </p>
-          </div>
-        </div>
 
-        <div className="mt-12 rounded-2xl bg-gradient-to-r from-primary/10 to-primary/5 p-6 text-center sm:p-8">
-          <p className="text-sm text-muted-foreground sm:text-base">
-            To wyróżnienie potwierdza, że nasze metody naprawdę przynoszą efekty i że trafiasz do miejsca sprawdzonego, skutecznego i rekomendowanego przez innych rodziców.
-          </p>
+          <div className="rounded-2xl border border-secondary/45 bg-secondary/15 p-4 text-center shadow-xl sm:p-6">
+            <AwardImage year="2026" />
+          </div>
         </div>
       </div>
     </section>
