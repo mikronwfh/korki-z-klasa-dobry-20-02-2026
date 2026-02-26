@@ -1,4 +1,5 @@
 import { useSiteContent } from "@/hooks/useSiteContent";
+import { useState } from "react";
 
 const defaultAwardsContent = {
   subtitle: "Laureaci plebiscytu",
@@ -34,6 +35,7 @@ const getBadgeImageSrc = (year: string) => {
 
 const AwardsSection = () => {
   const { content } = useSiteContent("home_awards");
+  const [imageErrorKeys, setImageErrorKeys] = useState<Record<string, boolean>>({});
   const awards = {
     ...defaultAwardsContent,
     ...(content?.content ?? {}),
@@ -53,19 +55,42 @@ const AwardsSection = () => {
 
         <div className="mx-auto mt-10 grid max-w-3xl gap-5 sm:grid-cols-2">
           {badges.map((badge: AwardBadge, index: number) => (
+            (() => {
+              const badgeKey = `${badge.year}-${index}`;
+              const hasImageError = Boolean(imageErrorKeys[badgeKey]);
+
+              return (
             <article
-              key={`${badge.year}-${index}`}
+              key={badgeKey}
               className="rounded-2xl border border-secondary/45 bg-secondary/15 p-4 text-center shadow-xl sm:p-6"
             >
               <div className="mx-auto w-full max-w-[320px]">
-                <img
-                  src={getBadgeImageSrc(badge.year)}
-                  alt={`${badge.title} ${badge.subtitle} ${badge.year}`}
-                  className="h-auto w-full rounded-2xl object-contain"
-                  loading="lazy"
-                />
+                {!hasImageError ? (
+                  <img
+                    src={getBadgeImageSrc(badge.year)}
+                    alt={`${badge.title} ${badge.subtitle} ${badge.year}`}
+                    className="h-auto w-full rounded-2xl object-contain"
+                    loading="lazy"
+                    onError={() =>
+                      setImageErrorKeys((prev) => ({
+                        ...prev,
+                        [badgeKey]: true,
+                      }))
+                    }
+                  />
+                ) : (
+                  <div className="rounded-2xl border border-secondary/35 bg-secondary/10 px-4 py-8">
+                    <p className="text-lg font-black tracking-wide text-secondary">{badge.title}</p>
+                    <p className="mt-2 text-xs font-semibold tracking-wide text-primary-foreground/90">
+                      {badge.subtitle}
+                    </p>
+                    <p className="mt-3 text-4xl font-black leading-none">{badge.year}</p>
+                  </div>
+                )}
               </div>
             </article>
+              );
+            })()
           ))}
         </div>
       </div>
