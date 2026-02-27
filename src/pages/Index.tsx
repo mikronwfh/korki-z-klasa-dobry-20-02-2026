@@ -4,7 +4,6 @@ import EnrollmentSection from "@/components/EnrollmentSection";
 import LocationSection from "@/components/LocationSection";
 import ServicesSection from "@/components/ServicesSection";
 import AboutSection from "@/components/AboutSection";
-import AwardsSection from "@/components/AwardsSection";
 import PricingSection from "@/components/PricingSection";
 import CoursePlatformSection from "@/components/CoursePlatformSection";
 import FreeMaterialsSection from "@/components/FreeMaterialsSection";
@@ -18,15 +17,14 @@ const Index = () => {
     <div className="min-h-screen bg-background">
       <Navbar />
       <HeroSection />
+      <EnrollmentSection />
+      <LocationSection />
       <ServicesSection />
       <AboutSection />
-      <AwardsSection />
       <PricingSection />
       <CoursePlatformSection />
       <SocialSection />
       <OpinionsSection />
-      <EnrollmentSection />
-      <LocationSection />
       <FreeMaterialsSection />
       <ContactSection />
       <Footer />
