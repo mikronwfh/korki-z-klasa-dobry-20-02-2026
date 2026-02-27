@@ -14,8 +14,9 @@ const defaultNavbarContent = {
     { label: "O nas", href: "#o-mnie" },
     { label: "Wyróżnienia", href: "#wyroznienia" },
     { label: "Cennik", href: "#cennik" },
-    { label: "Darmowe materiały", href: "#darmowe-materialy" },
+    { label: "Kursy online", href: "#kursy" },
     { label: "Opinie", href: "#opinie" },
+    { label: "Darmowe materiały", href: "#darmowe-materialy" },
     { label: "Kontakt", href: "#kontakt" },
   ],
 };
