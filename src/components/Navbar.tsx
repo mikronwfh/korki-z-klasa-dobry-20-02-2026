@@ -26,13 +26,7 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const { content } = useSiteContent("site_navbar");
   const navbar = { ...defaultNavbarContent, ...(content?.content ?? {}) };
-  const navLinks = defaultNavbarContent.links.map((link, index) => {
-    const override = navbar.links?.[index];
-    return {
-      label: override?.label ?? link.label,
-      href: override?.href ?? link.href,
-    };
-  });
+  const navLinks = navbar.links || defaultNavbarContent.links;
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-card/90 backdrop-blur-md border-b border-border/50">
