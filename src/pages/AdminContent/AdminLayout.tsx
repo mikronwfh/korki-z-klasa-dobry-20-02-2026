@@ -104,7 +104,7 @@ export default function AdminLayout() {
   }
 
   return (
-    <div className="flex h-screen bg-background flex-col md:flex-row">
+    <div className="flex h-screen bg-background text-foreground flex-col md:flex-row">
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between bg-card border-b border-border p-4">
         <h1 className="text-lg font-bold">Panel Admin</h1>

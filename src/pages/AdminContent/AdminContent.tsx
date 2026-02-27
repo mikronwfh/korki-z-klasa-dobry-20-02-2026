@@ -295,6 +295,7 @@ const toFeatureList = (value: string) =>
     .filter(Boolean);
 
 export function AdminContent() {
+  console.log("AdminContent rendered");
   const { toast } = useToast();
   const {
     content: heroContent,
@@ -870,9 +871,9 @@ export function AdminContent() {
   }, [footerContent]);
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 min-h-screen">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-2xl font-bold">Panel admin</h2>
+        <h2 className="text-2xl font-bold text-foreground">Panel admin</h2>
         <Button onClick={handleSaveAll} className="bg-green-600 hover:bg-green-700 w-full md:w-auto">
           Zapisz wszystko (Ctrl+S)
         </Button>
