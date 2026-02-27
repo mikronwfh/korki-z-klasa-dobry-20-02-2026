@@ -73,6 +73,7 @@ const defaultAboutContent = {
 };
 
 const defaultAwardsContent = {
+  subtitle: "WYRÓŻNIENIA",
   title: "Laureaci Orłów Edukacji 2025 i 2026",
   description:
     "Zaufali nam uczniowie i rodzice — i to właśnie ich opinie sprawiły, że zostaliśmy laureatami ogólnopolskiego plebiscytu Orły Edukacji dwa lata z rzędu: 2025 i 2026. Dla Ciebie to jasny sygnał: trafiasz do miejsca sprawdzonego, skutecznego i rekomendowanego przez innych rodziców. To wyróżnienie potwierdza, że nasze metody naprawdę przynoszą efekty.",
@@ -408,6 +409,7 @@ export function AdminContent() {
   const [aboutParagraph2, setAboutParagraph2] = useState("");
   const [aboutStats, setAboutStats] = useState(defaultAboutContent.stats.map((s) => ({ ...s })));
 
+  const [awardsSubtitle, setAwardsSubtitle] = useState("");
   const [awardsTitle, setAwardsTitle] = useState("");
   const [awardsDescription, setAwardsDescription] = useState("");
   const [awardsImage2025Url, setAwardsImage2025Url] = useState("");
@@ -531,6 +533,7 @@ export function AdminContent() {
 
   const handleSaveAwards = async () => {
     await saveAwardsContent({
+      subtitle: awardsSubtitle,
       title: awardsTitle,
       description: awardsDescription,
       image_2025_url: awardsImage2025Url,
@@ -731,6 +734,7 @@ export function AdminContent() {
 
   useEffect(() => {
     const awards = { ...defaultAwardsContent, ...(awardsContent?.content ?? {}) };
+    setAwardsSubtitle(awards.subtitle ?? "");
     setAwardsTitle(awards.title ?? "");
     setAwardsDescription(awards.description ?? "");
     setAwardsImage2025Url(awards.image_2025_url ?? "");
